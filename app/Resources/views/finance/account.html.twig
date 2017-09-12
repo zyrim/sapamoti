@@ -1,0 +1,11 @@
+<h1>{{ account.name }}</h1>
+<p>{{ amount|movement|raw }}</p>
+<h2>Umsatz hinzufügen</h2>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+<h2>Umsätze</h2>
+{% for movement in movements %}
+    <h3>{{ movement.description }}</h3>
+    <p>{{ movement.amount|movement|raw }}</p>
+{% endfor %}

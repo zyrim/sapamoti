@@ -1,0 +1,6 @@
+<a href="{{ url("addAccount") }}">Account hinzufügen</a>
+<h1>Accounts</h1>
+{% for account in accounts %}
+    <h2><a href="{{ url('account', {'id': account.account.financeAccountId}) }}">{{ account.account.name }}</a></h2>
+    <p>({{ account.movements }}) {{ account.amount }}</p>
+{% endfor %}
