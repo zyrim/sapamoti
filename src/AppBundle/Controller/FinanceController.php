@@ -125,6 +125,8 @@ class FinanceController extends Controller
 
             $account->addMovement($movement);
             $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('account', ['id' => $id]);
         }
 
         $values['form'] = $form->createView();
