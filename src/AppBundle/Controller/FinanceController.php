@@ -8,6 +8,7 @@ use AppBundle\Repository\FinanceAccountRepository;
 use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -92,26 +93,31 @@ class FinanceController extends Controller
         $values = [
             'account' => $account,
             'amount' => $this->repository->getAmount($account),
+            'fixed' => $this->repository->getFixedMovements($account),
             'movements' => []
         ];
 
         foreach ($account->getMovements() as $movement) {
-            $values['movements'][] = [
-                'description' => $movement->getDescription(),
-                'amount' => $movement->getAmount()
-            ];
+            if (!$movement->isFixed()) {
+                $values['movements'][] = [
+                    'description' => $movement->getDescription(),
+                    'amount'      => $movement->getAmount()
+                ];
+            }
         }
 
         $movement = new FinanceMovement();
         $movement->setAccount($account)
             ->setAmount(0.0)
             ->setDescription('Gehaltsauszahlung')
-            ->setDate(new \DateTime());
+            ->setDate(new \DateTime())
+            ->setFixed(false);
 
         $form = $this->createFormBuilder($movement)
             ->add('description', TextareaType::class)
             ->add('amount', NumberType::class)
             ->add('date', DateType::class)
+            ->add('fixed', CheckboxType::class)
             ->add('save', SubmitType::class, ['label' => 'Hinzufügen'])
             ->getForm();
 

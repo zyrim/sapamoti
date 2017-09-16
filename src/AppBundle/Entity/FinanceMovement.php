@@ -50,6 +50,13 @@ class FinanceMovement
      */
     protected $date;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="fixed", type="boolean", nullable=false)
+     */
+    protected $fixed;
+
 
     /**
      * Get id
@@ -151,6 +158,26 @@ class FinanceMovement
     public function getDate(): \DateTime
     {
         return $this->date;
+    }
+
+    /**
+     * @return null|bool
+     */
+    public function isFixed()
+    {
+        return $this->fixed;
+    }
+
+    /**
+     * @param bool $fixed
+     *
+     * @return FinanceMovement
+     */
+    public function setFixed(bool $fixed)
+    {
+        $this->fixed = $fixed;
+
+        return $this;
     }
 }
 
