@@ -1,8 +1,19 @@
-.idea/workspace.xml___jb_tmp___
-.idea/workspace.xml
-.idea/webServers.xml
-.idea/vcs.xml
-.idea/sapamoti.iml
-.idea/php.xml
-.idea/modules.xml
-.idea/deployment.xml
+<<<<<<< .gitignore
+/.web-server-pid
+/app/config/parameters.yml
+/build/
+/phpunit.xml
+/var/*
+!/var/cache
+/var/cache/*
+!var/cache/.gitkeep
+!/var/logs
+/var/logs/*
+!var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+!var/SymfonyRequirements.php
+/vendor/
+/web/bundles/
+.idea/*
