@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\FinanceAccount;
 use AppBundle\Entity\FinanceMovement;
+use AppBundle\Entity\User;
 use AppBundle\Repository\FinanceAccountRepository;
 use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -34,10 +35,14 @@ class FinanceController extends Controller
     protected $account;
 
     /**
-     * @Route("/finance", name="finance")
+     * @Route("/", name="homepage")
      */
     public function indexAction()
     {
+        if (!$this->getUser() instanceof User) {
+            return $this->redirectToRoute('security_login');
+        }
+
         $accountsArray = [];
         /** @var FinanceAccountRepository $repo */
         $repo = $this->getRepository();

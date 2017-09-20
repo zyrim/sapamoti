@@ -4,15 +4,17 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <h1>Login!</h1>
-
                 {% if error %}
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
+                {% form_theme form 'bootstrap_3_layout.html.twig' %}
                 {{ form_start(form) }}
-                    {{ form_row(form._username) }}
-                    {{ form_row(form._password) }}
-
+                    <div class="form-group">
+                        {{ form_row(form._username) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form._password) }}
+                    </div>
                     <button type="submit" class="btn btn-primary">Login <span class="fa fa-lock"></span></button>
                 {{ form_end(form) }}
             </div>

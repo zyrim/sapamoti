@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-10">
+            <h1>{{ title }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="list-group">
+                <a class="list-group-item{{ app.request.attributes.get('_route') == 'user_edit' ? ' active' }}" href="{{ url('user_edit') }}">Profil bearbeiten</a>
+                <a class="list-group-item{{ app.request.attributes.get('_route') == 'user_change_password' ? ' active' }}" href="{{ url('user_change_password') }}">Passwort ändern</a>
+                <a class="list-group-item" href="#">Profil löschen</a>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            {{ include(template) }}
+        </div>
+    </div>
+{% endblock %}

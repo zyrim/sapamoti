@@ -1,3 +1,6 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
 <h1>{{ account.name }}</h1>
 <p>{{ amount|movement|raw }}</p>
 <h2>Umsatz hinzufügen</h2>
@@ -16,3 +19,4 @@
 {% endfor %}
 <h2>Ausgangswert</h2>
 <p>{{ account.amount|movement|raw }}</p>
+{% endblock %}

@@ -2,18 +2,26 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('bundles/css/bootstrap.min.css') }}" type="text/css">
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% if is_granted('ROLE_USER') %}
-            <a class="btn btn-success" href="{{ url('security_logout') }}">Ausloggen</a>
-        {% else %}
-            <a class="btn btn-default" href="{{ url('security_login') }}">Einloggen</a>
-        {% endif %}
-        {% block body %}{% endblock %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    {% if is_granted('ROLE_USER') %}
+                        <a class="btn btn-default" href="{{ url('security_logout') }}">Ausloggen</a>
+                        <a class="btn btn-link" href="{{ url('user_edit') }}">{{ app.user.username }}</a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ url('security_login') }}">Einloggen</a>
+                    {% endif %}
+                </div>
+                <br><br><br>
+            </div>
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>

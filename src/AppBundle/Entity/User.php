@@ -27,6 +27,20 @@ class User implements UserInterface
     /**
      * @var string
      *
+     * @ORM\Column(name="first_name", type="string", length=30, nullable=true)
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=30, nullable=true)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="email", type="string", nullable=false, unique=true)
      */
     private $email;
@@ -78,11 +92,67 @@ class User implements UserInterface
     }
 
     /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $firstName
+     * @return User
+     */
+    public function setFirstName(string $firstName): User
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     * @return User
+     */
+    public function setLastName(string $lastName): User
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getUsername()
     {
-        return $this->email;
+        $username = $this->email;
+
+        if ($this->firstName) {
+            $username = $this->firstName;
+
+            if ($this->lastName) {
+                $username .= ' ' . $this->lastName;
+            }
+        }
+
+        return $username;
     }
 
     /**
@@ -113,9 +183,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getPlainPassword(): string
+    public function getPlainPassword()
     {
         return $this->plainPassword;
     }
