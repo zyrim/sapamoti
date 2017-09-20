@@ -7,7 +7,11 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        {% if is_granted('ROLE_USER') %}
+            <a class="btn btn-success" href="{{ url('security_logout') }}">Ausloggen</a>
+        {% else %}
+            <a class="btn btn-default" href="{{ url('security_login') }}">Einloggen</a>
+        {% endif %}
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
     </body>
 </html>

@@ -3,66 +3,50 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class User
  *
- * @package
+ * @package AppBundle
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="user_id", type="integer", nullable=false)
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private $userId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255)
-     *
-     * @Assert\NotBlank()
+     * @ORM\Column(name="email", type="string", nullable=false, unique=true)
      */
     private $email;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=255)
-     *
-     * @Assert\NotBlank()
+     * @ORM\Column(name="password", type="string", nullable=false)
      */
     private $password;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="firstname", type="string", length=30)
-     *
-     * @Assert\NotBlank()
      */
-    private $firstname;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=30)
-     *
-     * @Assert\NotBlank()
-     */
-    private $lastname;
+    private $plainPassword;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime")
+     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
 
@@ -75,20 +59,15 @@ class User
     }
 
     /**
-     * Get id
-     *
      * @return int
      */
-    public function getId(): int
+    public function getUserId(): int
     {
-        return $this->id;
+        return $this->userId;
     }
 
     /**
-     * Set email
-     *
      * @param string $email
-     *
      * @return User
      */
     public function setEmail(string $email): User
@@ -99,29 +78,26 @@ class User
     }
 
     /**
-     * Get email
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getEmail(): string
+    public function getUsername()
     {
         return $this->email;
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
-    public function getPassword(): string
+    public function getRoles()
     {
-        return $this->password;
+        return ['ROLE_USER'];
     }
 
     /**
      * @param string $password
-     *
      * @return User
      */
-    public function setPassword(string $password)
+    public function setPassword(string $password): User
     {
         $this->password = $password;
 
@@ -129,51 +105,48 @@ class User
     }
 
     /**
-     * Set firstname
-     *
-     * @param string $firstname
-     *
+     * @inheritDoc
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlainPassword(): string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string $plainPassword
      * @return User
      */
-    public function setFirstname(string $firstname): User
+    public function setPlainPassword(string $plainPassword): User
     {
-        $this->firstname = $firstname;
+        $this->plainPassword = $plainPassword;
+
+        $this->password = null;
 
         return $this;
     }
 
     /**
-     * Get firstname
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getFirstname(): string
+    public function getSalt()
     {
-        return $this->firstname;
+        // TODO: Implement getSalt() method.
     }
 
     /**
-     * Set lastname
-     *
-     * @param string $lastname
-     *
-     * @return User
+     * @inheritDoc
      */
-    public function setLastname(string $lastname): User
+    public function eraseCredentials()
     {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    /**
-     * Get lastname
-     *
-     * @return string
-     */
-    public function getLastname(): string
-    {
-        return $this->lastname;
+        $this->plainPassword = null;
     }
 
     /**
