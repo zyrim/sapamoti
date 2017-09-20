@@ -54,7 +54,7 @@ class FinanceController extends Controller
             $accountsArray[] = [
                 'account' => $account,
                 'movements' => $account->getMovements()->count(),
-                'amount'  => $repo->getAmount($account)
+                'amount'  => $account->getAmount()
             ];
         }
 

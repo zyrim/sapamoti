@@ -34,6 +34,6 @@ class AppExtension extends \Twig\Extension\AbstractExtension
             $color = 'black';
         }
 
-        return '<span style="color: ' . $color. '">' . $number . '</span>';
+        return '<span style="font-weight: bold; color: ' . $color. '">' . $number . '</span>';
     }
 }
