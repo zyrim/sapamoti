@@ -45,7 +45,6 @@ class FinanceAccount
      */
     private $movements;
 
-
     /**
      * Get id
      *
@@ -81,11 +80,41 @@ class FinanceAccount
     }
 
     /**
+     * @param bool $dontCalulate
      * @return float
      */
-    public function getAmount(): float
+    public function getAmount(bool $dontCalulate = false): float
     {
-        return $this->amount;
+        $amount = $this->amount;
+
+        if ($dontCalulate) {
+            return $amount;
+        }
+
+        if (!$this->getMovements()->count()) {
+            return $amount;
+        }
+
+        $fixed = [];
+
+        foreach ($this->getMovements() as $movement) {
+            if ($movement->isFixed()) {
+                $fixed[] = $movement;
+                continue;
+            }
+
+            $amount += $movement->getAmount();
+        }
+
+        // When in new month, add fixed movements
+        if (date('Y-m-d') >= date('Y-m-01')) {
+            /** @var FinanceMovement $movement */
+            foreach ($fixed as $movement) {
+                $amount += $movement->getAmount();
+            }
+        }
+
+        return $amount;
     }
 
     /**
@@ -134,6 +163,16 @@ class FinanceAccount
     public function getMovements()
     {
         return $this->movements;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection|FinanceMovement[]
+     */
+    public function getFixedMovements()
+    {
+        return $this->getMovements()->filter(function (FinanceMovement $movement) {
+            return $movement->isFixed();
+        });
     }
 }
 

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\FinanceAccount;
 use AppBundle\Entity\FinanceMovement;
 use AppBundle\Entity\User;
+use AppBundle\Form\FinanceMovementForm;
 use AppBundle\Repository\FinanceAccountRepository;
 use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -63,10 +64,10 @@ class FinanceController extends Controller
     /**
      * @Route("/finance/add", name="addAccount")
      */
-    public function addaccountAction(Request $request)
+    public function addAccountAction(Request $request)
     {
         $account = new FinanceAccount();
-        $account->setName('Kim')
+        $account->setName('')
             ->setAmount(0.0);
 
         $form = $this->createFormBuilder($account)
@@ -83,7 +84,7 @@ class FinanceController extends Controller
             $this->getDoctrine()->getManager()->persist($account);
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('finance');
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('finance/addaccount.html.twig', ['form' => $form->createView()]);
@@ -97,8 +98,7 @@ class FinanceController extends Controller
         $account = $this->getAccount($id);
         $values = [
             'account' => $account,
-            'amount' => $this->repository->getAmount($account),
-            'fixed' => $this->repository->getFixedMovements($account),
+            'fixed' => $account->getFixedMovements(),
             'movements' => []
         ];
 
@@ -112,19 +112,14 @@ class FinanceController extends Controller
         }
 
         $movement = new FinanceMovement();
-        $movement->setAccount($account)
+        $movement
+            ->setAccount($account)
             ->setAmount(0.0)
-            ->setDescription('Gehaltsauszahlung')
+            ->setDescription('')
             ->setDate(new \DateTime())
-            ->setFixed(false);
-
-        $form = $this->createFormBuilder($movement)
-            ->add('description', TextareaType::class)
-            ->add('amount', NumberType::class)
-            ->add('date', DateType::class)
-            ->add('fixed', CheckboxType::class)
-            ->add('save', SubmitType::class, ['label' => 'Hinzufügen'])
-            ->getForm();
+            ->setFixed(false)
+        ;
+        $form = $this->createForm(FinanceMovementForm::class, $movement);
 
         $form->handleRequest($request);
 

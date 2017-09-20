@@ -1,22 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>{{ account.name }}</h1>
-<p>{{ amount|movement|raw }}</p>
-<h2>Umsatz hinzufügen</h2>
-{{ form_start(form) }}
-{{ form_widget(form) }}
-{{ form_end(form) }}
-<h2>Fixe Umsätze</h2>
-{% for movement in fixed %}
-    <h3>{{ movement.description }}</h3>
-    <p>{{ movement.amount|movement|raw }}</p>
-{% endfor %}
-<h2>Umsätze</h2>
-{% for movement in movements %}
-    <h3>{{ movement.description }}</h3>
-    <p>{{ movement.amount|movement|raw }}</p>
-{% endfor %}
-<h2>Ausgangswert</h2>
-<p>{{ account.amount|movement|raw }}</p>
+    {% form_theme form 'bootstrap_3_layout.html.twig' %}
+    <h1>{{ account.name }}</h1>
+    <p>{{ account.amount|movement|raw }}</p>
+    <h2>Umsatz hinzufügen</h2>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+    {% if fixed|length %}
+        <h2>Fixe Umsätze</h2>
+        {% for movement in fixed %}
+            <h3>{{ movement.description }}</h3>
+            <p>{{ movement.amount|movement|raw }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if movements|length %}
+        <h2>Umsätze</h2>
+        {% for movement in movements %}
+            <h3>{{ movement.description }}</h3>
+            <p>{{ movement.amount|movement|raw }}</p>
+        {% endfor %}
+        <h2>Ausgangswert</h2>
+        <p>{{ account.amount|movement|raw }}</p>
+    {% endif %}
 {% endblock %}
