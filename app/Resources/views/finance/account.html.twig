@@ -22,7 +22,7 @@
         <h2>Umsätze</h2>
         {% for movement in movements %}
             <h3>{{ movement.description }}</h3>
-            <p>{{ movement.amount|movement|raw }}<p>
+            <p>{{ movement.amount|movement|raw }}</p>
         {% endfor %}
         <h2>Ausgangswert</h2>
         <p>{{ account.amount|movement|raw }}</p>
