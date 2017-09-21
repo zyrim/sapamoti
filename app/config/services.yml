@@ -13,6 +13,9 @@ services:
         autowire: true
         tags:
             - { name: doctrine.event_subscriber }
+    app.twig.app_extension:
+        class: AppBundle\Twig\AppExtension
+        autowire: true
     _defaults:
         # automatically injects dependencies in your services
         autowire: true

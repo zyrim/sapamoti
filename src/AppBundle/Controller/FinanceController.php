@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class FinanceController
@@ -138,6 +139,71 @@ class FinanceController extends Controller
         $values['form'] = $form->createView();
 
         return $this->render('finance/account.html.twig', $values);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     *
+     * @Route("/finance/{id}/edit", name="finance_edit")
+     */
+    public function editAction(Request $request, int $id = 0)
+    {
+        $account = $this->getAccount($id);
+        $form = $this->createFormBuilder()
+            ->add('_name', TextType::class, ['label' => 'Bezeichnung'])
+            ->add('_amount', NumberType::class, ['label' => 'Aktuelle Summe'])
+            ->add('_save', SubmitType::class, ['label' => 'Speichern'])
+        ;
+        $form->get('_name')->setData($account->getName());
+        $form->get('_amount')->setData($account->getAmount(true));
+        $form = $form->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $account->setName($data['_name'])->setAmount($data['_amount']);
+
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('account', ['id' => $account->getFinanceAccountId()]);
+        }
+
+        return $this->render('finance/finance.html.twig', [
+            'account' => $account,
+            'template' => 'finance/edit.html.twig',
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     *
+     * @Route("/finance/{id}/movements", name="account_movements")
+     */
+    public function movementsAction(Request $request, int $id = 0)
+    {
+        $account = $this->getAccount($id);
+        $movements = $account->getMovements();
+        $show = $request->get('show', 'all');
+
+        if ($show != 'all') {
+            $movements = $movements->filter(function (FinanceMovement $movement) use ($show) {
+                if ($show == 'plus') {
+                    return $movement->getAmount() >= 0;
+                } elseif ($show == 'minus') {
+                    return $movement->getAmount() < 0;
+                }
+            });
+        }
+
+        return $this->render('finance/finance.html.twig', [
+            'account' => $account,
+            'movements' => $movements,
+            'template' => 'finance/movements.html.twig',
+        ]);
     }
 
     /**

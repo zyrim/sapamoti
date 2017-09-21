@@ -10,8 +10,8 @@
     <div class="row">
         <div class="col-lg-2">
             <div class="list-group">
-                <a class="list-group-item{{ app.request.attributes.get('_route') == 'user_edit' ? ' active' }}" href="{{ url('user_edit') }}">Profil bearbeiten</a>
-                <a class="list-group-item{{ app.request.attributes.get('_route') == 'user_change_password' ? ' active' }}" href="{{ url('user_change_password') }}">Passwort ändern</a>
+                <a class="list-group-item {{ routeMatch('user_edit') }}" href="{{ url('user_edit') }}">Profil bearbeiten</a>
+                <a class="list-group-item {{ routeMatch('user_change_password') }}" href="{{ url('user_change_password') }}">Passwort ändern</a>
                 <a class="list-group-item" href="#">Profil löschen</a>
             </div>
         </div>

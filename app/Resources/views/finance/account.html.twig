@@ -3,6 +3,7 @@
 {% block body %}
     {% form_theme form 'bootstrap_3_layout.html.twig' %}
     <h1>{{ account.name }}</h1>
+    <p><a href="{{ url('finance_edit', {'id': account.financeAccountId}) }}">Konto bearbeiten</a></p>
     <p>{{ account.amount|movement|raw }}</p>
     <h2>Umsatz hinzufügen</h2>
     {{ form_start(form) }}
@@ -21,7 +22,7 @@
         <h2>Umsätze</h2>
         {% for movement in movements %}
             <h3>{{ movement.description }}</h3>
-            <p>{{ movement.amount|movement|raw }}</p>
+            <p>{{ movement.amount|movement|raw }}<p>
         {% endfor %}
         <h2>Ausgangswert</h2>
         <p>{{ account.amount|movement|raw }}</p>

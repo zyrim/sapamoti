@@ -1,0 +1,26 @@
+<div class="btn-group">
+    <a class="btn btn-default {{ routeMatch('account_movements', 'active', {'show': 'all'}) }}" href="{{ url('account_movements', {'id': account.financeAccountId, 'show': 'all'}) }}">Alle</a>
+    <a class="btn btn-default {{ routeMatch('account_movements', 'active', {'show': 'plus'}) }}" href="{{ url('account_movements', {'id': account.financeAccountId, 'show': 'plus'}) }}">+</a>
+    <a class="btn btn-default {{ routeMatch('account_movements', 'active', {'show': 'minus'}) }}" href="{{ url('account_movements', {'id': account.financeAccountId, 'show': 'minus'}) }}">-</a>
+</div>
+<table class="table table-bordered table-responsive">
+    <thead>
+        <tr>
+            <th>Umsatz</th>
+            <th>Summe</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for movement in movements %}
+            {% if movement.amount < 0 %}
+                {% set class = 'alert alert-danger' %}
+            {% elseif movement.amount > 0 %}
+                {% set class = 'alert alert-success' %}
+            {% endif %}
+            <tr class="{{ class }}">
+                <td>{{ movement.description }}</td>
+                <td>{{ movement.amount }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
