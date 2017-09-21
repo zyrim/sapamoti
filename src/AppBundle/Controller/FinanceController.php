@@ -75,12 +75,21 @@ class FinanceController extends Controller
             ->add('name', TextType::class)
             ->add('amount', NumberType::class)
             ->add('save', SubmitType::class, ['label' => 'Account erstellen'])
+        $form = $this->createFormBuilder()
+            ->add('_name', TextType::class)
+            ->add('_amount', NumberType::class)
+            ->add('_save', SubmitType::class, ['label' => 'Account erstellen'])
             ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $account = $form->getData();
+            $data = $form->getData();
+            $account = new FinanceAccount();
+            $account
+                ->setName($data['_name'])
+                ->setAmount($data['_amount'])
+            ;
 
             $this->getDoctrine()->getManager()->persist($account);
             $this->getDoctrine()->getManager()->flush();
