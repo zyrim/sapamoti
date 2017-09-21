@@ -19,7 +19,8 @@
                 {% set class = 'alert alert-success' %}
             {% endif %}
             <tr class="{{ class }}">
-                <td>{{ movement.description }}</td>
+                <td>{{ movement.date|date('d.m.Y') }}</td>
+                <td><a href="{{ url('account_movement_edit', {'id': movement.financeMovementId}) }}">{{ movement.description }}</a></td>
                 <td>{{ movement.amount }}</td>
             </tr>
         {% endfor %}

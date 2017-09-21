@@ -207,6 +207,51 @@ class FinanceController extends Controller
     }
 
     /**
+     * @Route("/finance/movement/{id}", name="account_movement_edit")
+     */
+    public function editMovementAction(Request $request, int $id = 0)
+    {
+        $this->checkUser();
+
+        $movement = $this->getDoctrine()->getRepository(FinanceMovement::class)->find($id);
+
+        if (!$movement instanceof FinanceMovement) {
+            throw new \InvalidArgumentException('Invalid movement id ' . $id);
+        }
+
+        $account = $movement->getAccount();
+
+        $form = $this->createForm(FinanceMovementForm::class, $movement)
+            ->remove('_save')
+            ->add('_save', SubmitType::class, ['label' => 'Speichern'])
+            ->add('_remove', SubmitType::class, [
+                'label' => 'Löschen',
+                'attr' => [
+                    'class' => 'btn btn-danger'
+                ]
+            ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            if ($form->get('_remove')->isClicked()) {
+                $em->remove($movement);
+            }
+
+            $em->flush();
+
+            return $this->redirectToRoute('account_movements', ['id' => $account->getFinanceAccountId()]);
+        }
+
+        return $this->render('finance/finance.html.twig', [
+            'account' => $account,
+            'template' => 'finance/movement.html.twig',
+            'form' => $form->createView()
+        ]);
+    }
+    /**
      * @return FinanceAccountRepository
      */
     protected function getRepository(): FinanceAccountRepository
