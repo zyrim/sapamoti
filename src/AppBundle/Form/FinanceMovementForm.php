@@ -22,11 +22,11 @@ class FinanceMovementForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('description', TextareaType::class, ['label' => 'Beschreibung'])
-            ->add('amount', NumberType::class, ['label' => 'Betrag'])
-            ->add('date', DateType::class, ['label' => 'Datum'])
-            ->add('fixed', CheckboxType::class, ['label' => 'Regelmäßig', 'required' => false])
-            ->add('save', SubmitType::class, ['label' => 'Hinzufügen'])
+            ->add('_description', TextareaType::class, ['label' => 'Beschreibung'])
+            ->add('_amount', NumberType::class, ['label' => 'Betrag'])
+            ->add('_date', DateType::class, ['label' => 'Datum'])
+            ->add('_fixed', CheckboxType::class, ['label' => 'Regelmäßig', 'required' => false])
+            ->add('_save', SubmitType::class, ['label' => 'Hinzufügen'])
         ;
     }
 }
