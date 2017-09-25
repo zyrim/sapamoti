@@ -7,17 +7,12 @@ use AppBundle\Entity\FinanceMovement;
 use AppBundle\Entity\User;
 use AppBundle\Form\FinanceMovementForm;
 use AppBundle\Repository\FinanceAccountRepository;
-use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use AppBundle\Controller\AbstractController as Controller;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class FinanceController
@@ -26,11 +21,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class FinanceController extends Controller
 {
-    /**
-     * @var FinanceAccountRepository
-     */
-    protected $repository;
-
     /**
      * @var FinanceAccount
      */
@@ -41,8 +31,8 @@ class FinanceController extends Controller
      */
     public function indexAction()
     {
-        if (!$this->getUser() instanceof User) {
-            return $this->redirectToRoute('security_login');
+        if ($this->checkUser() !== true) {
+            return $this->checkUser();
         }
 
         $accountsArray = [];
@@ -67,14 +57,10 @@ class FinanceController extends Controller
      */
     public function addAccountAction(Request $request)
     {
-        $account = new FinanceAccount();
-        $account->setName('')
-            ->setAmount(0.0);
+        if ($this->checkUser() !== true) {
+            return $this->checkUser();
+        }
 
-        $form = $this->createFormBuilder($account)
-            ->add('name', TextType::class)
-            ->add('amount', NumberType::class)
-            ->add('save', SubmitType::class, ['label' => 'Account erstellen'])
         $form = $this->createFormBuilder()
             ->add('_name', TextType::class)
             ->add('_amount', NumberType::class)
@@ -101,11 +87,15 @@ class FinanceController extends Controller
     }
 
     /**
-     * @Route("/finance/{id}", name="account")
+     * @Route("/finance/{financeAccountId}", name="account")
      */
-    public function accountAction(Request $request, $id = 0)
+    public function accountAction(Request $request, $financeAccountId = 0)
     {
-        $account = $this->getAccount($id);
+        if ($this->checkUser() !== true) {
+            return $this->checkUser();
+        }
+
+        $account = $this->getAccount($financeAccountId);
         $values = [
             'account' => $account,
             'fixed' => $account->getFixedMovements(),
@@ -154,11 +144,15 @@ class FinanceController extends Controller
      * @param Request $request
      * @param int $id
      *
-     * @Route("/finance/{id}/edit", name="finance_edit")
+     * @Route("/finance/{financeAccountId}/edit", name="finance_edit")
      */
-    public function editAction(Request $request, int $id = 0)
+    public function editAction(Request $request, int $financeAccountId = 0)
     {
-        $account = $this->getAccount($id);
+        if ($this->checkUser() !== true) {
+            return $this->checkUser();
+        }
+
+        $account = $this->getAccount($financeAccountId);
         $form = $this->createFormBuilder()
             ->add('_name', TextType::class, ['label' => 'Bezeichnung'])
             ->add('_amount', NumberType::class, ['label' => 'Aktuelle Summe'])
@@ -194,6 +188,10 @@ class FinanceController extends Controller
      */
     public function movementsAction(Request $request, int $id = 0)
     {
+        if ($this->checkUser() !== true) {
+            return $this->checkUser();
+        }
+
         $account = $this->getAccount($id);
         $movements = $account->getMovements();
         $show = $request->get('show', 'all');
@@ -220,7 +218,9 @@ class FinanceController extends Controller
      */
     public function editMovementAction(Request $request, int $id = 0)
     {
-        $this->checkUser();
+        if ($this->checkUser() !== true) {
+            return $this->checkUser();
+        }
 
         $movement = $this->getDoctrine()->getRepository(FinanceMovement::class)->find($id);
 
@@ -260,6 +260,19 @@ class FinanceController extends Controller
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @return bool|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    protected function checkUser()
+    {
+        if (!$this->getUser() instanceof User) {
+            return $this->redirectToRoute('security_login');
+        }
+
+        return true;
+    }
+
     /**
      * @return FinanceAccountRepository
      */

@@ -3,7 +3,7 @@
 {% block body %}
     {% form_theme form 'bootstrap_3_layout.html.twig' %}
     <h1>{{ account.name }}</h1>
-    <p><a href="{{ url('finance_edit', {'id': account.financeAccountId}) }}">Konto bearbeiten</a></p>
+    <p><a href="{{ url('finance_edit', {'financeAccountId': account.financeAccountId}) }}">Konto bearbeiten</a></p>
     <p>{{ account.amount|movement|raw }}</p>
     <h2>Umsatz hinzufügen</h2>
     {{ form_start(form) }}

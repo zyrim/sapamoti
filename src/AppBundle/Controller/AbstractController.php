@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class AbstractController
@@ -14,6 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 abstract class AbstractController extends Controller
 {
+    /**
+     * @var Request
+     */
+    protected $request;
+
     /**
      * @var User
      */
@@ -28,4 +34,67 @@ abstract class AbstractController extends Controller
      * @var EntityRepository
      */
     protected $repository;
+
+    /**
+     * @var object
+     */
+    protected $entity;
+
+    /**
+     * @return EntityManager
+     */
+    protected function entityManager(): EntityManager
+    {
+        if (!$this->em) {
+            $this->em = $this->getDoctrine()->getManager();
+        }
+
+        return $this->em;
+    }
+
+    /**
+     * @param string $repositoryClass
+     * @return EntityRepository
+     */
+    protected function repository(string $repositoryClass): EntityRepository
+    {
+        return $this->entityManager()->getRepository($repositoryClass);
+    }
+
+    /**
+     * @param int $id
+     * @return null|object
+     */
+    protected function getEntity(int $id = 0)
+    {
+        if (!$this->entity) {
+            if (!$this->request) {
+                $this->request = $this->get('request_stack');
+                $this->request = $this->request->getCurrentRequest();
+            }
+
+            $class = explode('\\', __NAMESPACE__)[0] . '\\Entity\\';
+
+            foreach ($this->request->query->all() as $key => $value) {
+                if (strpos($key, 'Id') !== false) {
+                    $class .= ucfirst(substr($key, 0, strlen($key) - 2));
+
+                    if (!$id) {
+                        $id = $value;
+                    }
+                    break;
+                }
+            }
+
+            if (class_exists($class)) {
+                $entity = $this->repository($class)->find($id);
+
+                if ($entity instanceof $class) {
+                    $this->entity = $entity;
+                }
+            }
+        }
+
+        return $this->entity;
+    }
 }
