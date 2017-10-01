@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace FinanceBundle\Controller;
 
 use AppBundle\Entity\FinanceAccount;
 use AppBundle\Entity\FinanceMovement;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class FinanceController
  *
- * @package AppBundle\Controller
+ * @package FinanceBundle\Controller
  */
 class FinanceController extends Controller
 {
@@ -27,14 +27,12 @@ class FinanceController extends Controller
     protected $account;
 
     /**
+     * @return bool|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     *
      * @Route("/", name="homepage")
      */
     public function indexAction()
     {
-        if ($this->checkUser() !== true) {
-            return $this->checkUser();
-        }
-
         $accountsArray = [];
         /** @var FinanceAccountRepository $repo */
         $repo = $this->getRepository();
@@ -45,11 +43,11 @@ class FinanceController extends Controller
             $accountsArray[] = [
                 'account' => $account,
                 'movements' => $account->getMovements()->count(),
-                'amount'  => $account->getAmount()
+                'amount' => $account->getAmount()
             ];
         }
 
-        return $this->render('finance/index.html.twig', ['accounts' => $accountsArray]);
+        return $this->render('@Finance/Finance/index.html.twig', ['accounts' => $accountsArray]);
     }
 
     /**
@@ -57,10 +55,6 @@ class FinanceController extends Controller
      */
     public function addAccountAction(Request $request)
     {
-        if ($this->checkUser() !== true) {
-            return $this->checkUser();
-        }
-
         $form = $this->createFormBuilder()
             ->add('_name', TextType::class)
             ->add('_amount', NumberType::class)
@@ -91,10 +85,6 @@ class FinanceController extends Controller
      */
     public function accountAction(Request $request, $financeAccountId = 0)
     {
-        if ($this->checkUser() !== true) {
-            return $this->checkUser();
-        }
-
         $account = $this->getAccount($financeAccountId);
         $values = [
             'account' => $account,
@@ -148,10 +138,6 @@ class FinanceController extends Controller
      */
     public function editAction(Request $request, int $financeAccountId = 0)
     {
-        if ($this->checkUser() !== true) {
-            return $this->checkUser();
-        }
-
         $account = $this->getAccount($financeAccountId);
         $form = $this->createFormBuilder()
             ->add('_name', TextType::class, ['label' => 'Bezeichnung'])
@@ -184,15 +170,11 @@ class FinanceController extends Controller
      * @param Request $request
      * @param int $id
      *
-     * @Route("/finance/{id}/movements", name="account_movements")
+     * @Route("/finance/{financeAccountId}/movements", name="account_movements")
      */
-    public function movementsAction(Request $request, int $id = 0)
+    public function movementsAction(Request $request, int $financeAccountId = 0)
     {
-        if ($this->checkUser() !== true) {
-            return $this->checkUser();
-        }
-
-        $account = $this->getAccount($id);
+        $account = $this->getAccount($financeAccountId);
         $movements = $account->getMovements();
         $show = $request->get('show', 'all');
 
@@ -206,10 +188,10 @@ class FinanceController extends Controller
             });
         }
 
-        return $this->render('finance/finance.html.twig', [
+        return $this->render('@Finance/Finance/finance.html.twig', [
             'account' => $account,
             'movements' => $movements,
-            'template' => 'finance/movements.html.twig',
+            'template' => '@Finance/Finance/movements.html.twig',
         ]);
     }
 
@@ -218,10 +200,6 @@ class FinanceController extends Controller
      */
     public function editMovementAction(Request $request, int $id = 0)
     {
-        if ($this->checkUser() !== true) {
-            return $this->checkUser();
-        }
-
         $movement = $this->getDoctrine()->getRepository(FinanceMovement::class)->find($id);
 
         if (!$movement instanceof FinanceMovement) {
@@ -259,18 +237,6 @@ class FinanceController extends Controller
             'template' => 'finance/movement.html.twig',
             'form' => $form->createView()
         ]);
-    }
-
-    /**
-     * @return bool|\Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    protected function checkUser()
-    {
-        if (!$this->getUser() instanceof User) {
-            return $this->redirectToRoute('security_login');
-        }
-
-        return true;
     }
 
     /**
