@@ -5,6 +5,11 @@ parameters:
 
 services:
     # default configuration for services in *this* file
+    app.event_listener.kernel_subscriber:
+        class: AppBundle\EventListener\KernelSubscriber
+        arguments: ['@service_container']
+        tags:
+                - { name: kernel.event_subscriber }
     app.security.login_form_authenticator:
         class: AppBundle\Security\LoginFormAuthenticator
         autowire: true

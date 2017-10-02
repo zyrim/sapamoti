@@ -1,6 +1,6 @@
 <?php
 
-namespace FinanceBundle\EventListener;
+namespace AppBundle\EventListener;
 
 use AppBundle\Entity\User;
 use Psr\Container\ContainerInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
  * Class KernelSubscriber
  *
- * @package FinanceBundle\EventListener
+ * @package AppBundle\EventListener
  */
 class KernelSubscriber implements EventSubscriberInterface
 {
@@ -35,8 +35,6 @@ class KernelSubscriber implements EventSubscriberInterface
     /**
      * Check if the user is logged in.
      * If not, return to login.
-     *
-     * @return RedirectResponse
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
@@ -54,6 +52,7 @@ class KernelSubscriber implements EventSubscriberInterface
 
         if (!$token instanceof TokenInterface) {
             $event->setResponse($response);
+            return;
         }
 
         if (!$token->getUser() instanceof User) {
