@@ -7,6 +7,7 @@ use AppBundle\Form\FinanceMovementForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Controller\AbstractController as Controller;
 use Symfony\Component\Form\Extension\Core\Type\{NumberType, SubmitType, TextType};
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\{Request, Response, RedirectResponse};
 
 /**
@@ -57,7 +58,15 @@ class AccountController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var FinanceMovement $movement */
             $movement = $form->getData();
+
+            if ($movement->getAmount() == 0) {
+                $form->get('_amount')->addError(new FormError('Es muss ein Betrag unter oder über 0 angegeben werden.'));
+                $values['form'] = $form->createView();
+
+                return $this->render('@Finance/Account/show.html.twig', $values);
+            }
 
             $em->persist($movement);
             $em->flush();
