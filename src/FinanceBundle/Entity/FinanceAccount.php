@@ -204,6 +204,8 @@ class FinanceAccount
     }
 
     /**
+     * Get only fixed movements.
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection|FinanceMovement[]
      */
     public function getFixedMovements()
@@ -211,6 +213,28 @@ class FinanceAccount
         return $this->getMovements()->filter(function (FinanceMovement $movement) {
             return $movement->isFixed();
         });
+    }
+
+    /**
+     * Get the sum of all movements.
+     *
+     * @return float|int
+     */
+    public function getMovementsAmountSum()
+    {
+        $amount = 0.0;
+
+        foreach ($this->getMovements() as $movement) {
+            if (
+                $movement->getAmount() < 0
+                || ($movement->getAmount() > 0
+                    && date('Y-m-d') >= $movement->getDate()->format('Y-m-d'))
+            ) {
+                $amount += $movement->getAmount();
+            }
+        }
+
+        return $amount;
     }
 }
 
