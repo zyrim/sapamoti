@@ -1,16 +1,16 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace FinanceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class FinanceMovement
  *
- * @package AppBundle
+ * @package FinanceBundle
  *
  * @ORM\Table(name="finance_movement")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\FinanceMovementRepository")
+ * @ORM\Entity(repositoryClass="FinanceBundle\Repository\FinanceMovementRepository")
  */
 class FinanceMovement
 {
@@ -26,7 +26,7 @@ class FinanceMovement
     /**
      * @var FinanceAccount
      *
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\FinanceAccount", inversedBy="movements")
+     * @ORM\ManyToOne(targetEntity="\FinanceBundle\Entity\FinanceAccount", inversedBy="movements")
      * @ORM\JoinColumn(name="finance_account_id", referencedColumnName="finance_account_id")
      */
     protected $account;

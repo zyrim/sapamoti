@@ -2,9 +2,9 @@
 
 {% block body %}
     <h1>Accounts</h1>
-    <a href="{{ url("addAccount") }}">Account hinzufügen</a>
+    <a href="{{ url("finance_account_add") }}">Account hinzufügen</a>
     {% for account in accounts %}
-        <h2><a href="{{ url('account', {'financeAccountId': account.account.financeAccountId}) }}">{{ account.account.name }}</a></h2>
+        <h2><a href="{{ url('finance_account', {'financeAccountId': account.account.financeAccountId}) }}">{{ account.account.name }}</a></h2>
         <p>({{ account.movements }}) {{ account.amount|movement|raw }}</p>
     {% endfor %}
 {% endblock %}

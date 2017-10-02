@@ -1,16 +1,16 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace FinanceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class FinanceAccount
  *
- * @package AppBundle
+ * @package FinanceBundle
  *
  * @ORM\Table(name="finance_account")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\FinanceAccountRepository")
+ * @ORM\Entity(repositoryClass="FinanceBundle\Repository\FinanceAccountRepository")
  */
 class FinanceAccount
 {
@@ -40,7 +40,7 @@ class FinanceAccount
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection|FinanceMovement[]
      *
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\FinanceMovement", mappedBy="account")
+     * @ORM\OneToMany(targetEntity="FinanceBundle\Entity\FinanceMovement", mappedBy="account")
      * @ORM\OrderBy({"financeMovementId" = "DESC"})
      */
     private $movements;
