@@ -7,7 +7,7 @@ use AppBundle\Form\FinanceMovementForm;
 use FinanceBundle\Entity\{FinanceAccount, FinanceMovement};
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\HttpFoundation\{Request, Response};
+use Symfony\Component\HttpFoundation\{Request, Response, RedirectResponse};
 
 /**
  * Class MovementController
@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\{Request, Response};
 class MovementController extends AbstractController
 {
     /**
+     * Show all movements of a finance account.
+     *
      * @param Request $request
      * @return Response
      *
@@ -47,6 +49,11 @@ class MovementController extends AbstractController
     }
 
     /**
+     * Edit (or delete) a movement.
+     *
+     * @param Request $request
+     * @return Response|RedirectResponse
+     *
      * @Route("/finance/movement/{financeMovementId}", name="finance_movements_edit")
      */
     public function editAction(Request $request)

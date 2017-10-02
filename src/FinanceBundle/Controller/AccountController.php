@@ -7,8 +7,7 @@ use AppBundle\Form\FinanceMovementForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Controller\AbstractController as Controller;
 use Symfony\Component\Form\Extension\Core\Type\{NumberType, SubmitType, TextType};
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\{Request, Response, RedirectResponse};
 
 /**
  * Class AccountController
@@ -18,8 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 class AccountController extends Controller
 {
     /**
+     * Show a finance account with all its movements.
+     *
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      *
      * @Route("/finance/account/show/{financeAccountId}", name="finance_account")
      */
@@ -73,6 +74,11 @@ class AccountController extends Controller
     }
 
     /**
+     * Add a new finance account.
+     *
+     * @param Request $request
+     * @return RedirectResponse|Response
+     *
      * @Route("/finance/account/add", name="finance_account_add")
      */
     public function addAction(Request $request)
@@ -104,8 +110,10 @@ class AccountController extends Controller
     }
 
     /**
+     * Edit (or delete) a finance account.
+     *
      * @param Request $request
-     * @return Response
+     * @return Response|RedirectResponse
      *
      * @Route("/finance/account/edit/{financeAccountId}", name="finance_account_edit")
      */

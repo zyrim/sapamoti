@@ -8,6 +8,7 @@ namespace FinanceBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class FinanceController
@@ -17,6 +18,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class FinanceController extends AbstractController
 {
     /**
+     * Show all finance accounts of the user.
+     *
+     * @return Response
+     *
      * @Route("/finance", name="finance_index")
      */
     public function indexAction()
