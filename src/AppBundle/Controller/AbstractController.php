@@ -3,8 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\{EntityManager, EntityRepository};
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -69,13 +68,13 @@ abstract class AbstractController extends Controller
     {
         if (!$this->entity) {
             if (!$this->request) {
-                $this->request = $this->get('request_stack');
-                $this->request = $this->request->getCurrentRequest();
+                /** @var Request $request */
+                $this->request = $this->get('request_stack')->getCurrentRequest();
             }
 
-            $class = explode('\\', __NAMESPACE__)[0] . '\\Entity\\';
+            $class = explode('\\', get_class($this))[0] . '\\Entity\\';
 
-            foreach ($this->request->query->all() as $key => $value) {
+            foreach ($this->request->attributes as $key => $value) {
                 if (strpos($key, 'Id') !== false) {
                     $class .= ucfirst(substr($key, 0, strlen($key) - 2));
 
