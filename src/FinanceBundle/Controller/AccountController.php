@@ -105,6 +105,7 @@ class AccountController extends Controller
             $data = $form->getData();
             $account = new FinanceAccount();
             $account
+                ->setUser($this->getUser())
                 ->setName($data['_name'])
                 ->setAmount($data['_amount'])
             ;

@@ -29,7 +29,7 @@ class FinanceController extends AbstractController
         $accountsArray = [];
         /** @var \FinanceBundle\Repository\FinanceAccountRepository $repo */
         $repo = $this->entityManager()->getRepository(\FinanceBundle\Entity\FinanceAccount::class);
-        $accounts = $repo->findAll();
+        $accounts = $repo->findBy(['user' => $this->getUser()]);
 
         /** @var \FinanceBundle\Entity\FinanceAccount $account */
         foreach ($accounts as $account) {

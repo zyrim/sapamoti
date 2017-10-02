@@ -2,6 +2,7 @@
 
 namespace FinanceBundle\Entity;
 
+use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,6 +23,14 @@ class FinanceAccount
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $financeAccountId;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="financeAccounts")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
+     */
+    private $user;
 
     /**
      * @var string
@@ -53,6 +62,28 @@ class FinanceAccount
     public function getFinanceAccountId(): int
     {
         return $this->financeAccountId;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return FinanceAccount
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
     /**
@@ -106,11 +137,18 @@ class FinanceAccount
             $amount += $movement->getAmount();
         }
 
-        // When in new month, add fixed movements
+        // When in new month, add fixed movements.
         if (date('Y-m-d') >= date('Y-m-01')) {
             /** @var FinanceMovement $movement */
             foreach ($fixed as $movement) {
-                $amount += $movement->getAmount();
+                // Positive movements shall only be edited if date is matching.
+                if (
+                    $movement->getAmount() < 0
+                    || ($movement->getAmount() > 0
+                    && date('Y-m-d') >= $movement->getDate()->format('Y-m-d'))
+                ) {
+                    $amount += $movement->getAmount();
+                }
             }
         }
 

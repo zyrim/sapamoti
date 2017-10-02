@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use FinanceBundle\Entity\FinanceAccount;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -56,6 +58,13 @@ class User implements UserInterface
      * @var string
      */
     private $plainPassword;
+
+    /**
+     * @var ArrayCollection|FinanceAccount[]
+     *
+     * @ORM\OneToMany(targetEntity="FinanceBundle\Entity\FinanceAccount", mappedBy="user")
+     */
+    private $financeAccounts;
 
     /**
      * @var \DateTime
@@ -241,6 +250,28 @@ class User implements UserInterface
     public function getCreated(): \DateTime
     {
         return $this->created;
+    }
+
+    /**
+     * Get finance accounts
+     *
+     * @return ArrayCollection|FinanceAccount[]
+     */
+    public function getFinanceAccounts()
+    {
+        return $this->financeAccounts;
+    }
+
+    /**
+     * @param ArrayCollection|FinanceAccount[] $financeAccounts
+     *
+     * @return User
+     */
+    public function setFinanceAccounts($financeAccounts)
+    {
+        $this->financeAccounts = $financeAccounts;
+
+        return $this;
     }
 }
 
