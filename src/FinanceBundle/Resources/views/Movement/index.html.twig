@@ -23,6 +23,10 @@
             <td><a href="{{ url('finance_movements_edit', {'financeMovementId': movement.financeMovementId}) }}">{{ movement.description }}</a></td>
             <td>{{ movement.amount }}</td>
         </tr>
+    {% else %}
+        <tr>
+            <td colspan="3">Keine Umsätze verfügbar.</td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
