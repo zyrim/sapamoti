@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -37,18 +38,26 @@ class KernelSubscriber implements EventSubscriberInterface
      *
      * @return RedirectResponse
      */
-    public function onKernelResponse()
+    public function onKernelResponse(FilterResponseEvent $event)
     {
         $router = $this->container->get('router');
+        $login = 'security_login';
+
+        $request = $event->getRequest();
+        
+        if ($request->get('_route') == $login) {
+            return;
+        }
+
         $token = $this->container->get('security.token_storage')->getToken();
         $response = new RedirectResponse($router->generate('security_login'));
 
         if (!$token instanceof TokenInterface) {
-            return $response;
+            $event->setResponse($response);
         }
 
         if (!$token->getUser() instanceof User) {
-            return $response;
+            $event->setResponse($response);
         }
     }
 
