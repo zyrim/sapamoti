@@ -93,4 +93,19 @@ class MovementController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/finance/strategize/{financeAccountId}", name="finance_movements_strategize")
+     */
+    public function strategizeAction()
+    {
+        /** @var FinanceAccount $account */
+        $account = $this->getEntity();
+        $values = [
+            'account' => $account,
+            'template' => '@Finance/Movement/strategize.html.twig'
+        ];
+
+        return $this->render('@Finance/Account/finance.html.twig', $values);
+    }
+
 }

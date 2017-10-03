@@ -12,6 +12,7 @@
             <div class="list-group">
                 <a class="list-group-item {{ routeMatch('finance_account_edit') }}" href="{{ url('finance_account_edit', {'financeAccountId': account.financeAccountId}) }}">Konto bearbeiten</a>
                 <a class="list-group-item {{ routeMatch('finance_movements') }}" href="{{ url('finance_movements', {'financeAccountId': account.financeAccountId}) }}">Umsätze</a>
+                <a class="list-group-item {{ routeMatch('finance_movements_strategize') }}" href="{{ url('finance_movements_strategize', {'financeAccountId': account.financeAccountId}) }}">Kostenplanung</a>
             </div>
         </div>
         <div class="col-lg-10">

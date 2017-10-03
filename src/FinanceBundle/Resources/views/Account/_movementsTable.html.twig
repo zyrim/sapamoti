@@ -1,0 +1,43 @@
+<table class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th>Datum</th>
+        <th>Umsatz</th>
+        {% if showSteps is defined and showSteps %}
+            <th>Stand vorher</th>
+        {% endif %}
+        <th>Summe</th>
+        {% if showSteps is defined and showSteps %}
+            <th>Stand nachher</th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for movement in movements %}
+        {% if showSteps is defined and showSteps %}
+            {% set class = '' %}
+        {% else %}
+            {% if movement.amount < 0 %}
+                {% set class = 'alert alert-danger' %}
+            {% elseif movement.amount > 0 %}
+                {% set class = 'alert alert-success' %}
+            {% endif %}
+        {% endif %}
+        <tr class="{{ class }}">
+            <td>{{ movement.date|date('d.m.Y') }}</td>
+            <td><a href="{{ url('finance_movements_edit', {'financeMovementId': movement.financeMovementId}) }}">{{ movement.description }}</a></td>
+            {% if showSteps is defined and showSteps %}
+                <td>{{ account.amountUntil(movement, true)|movement|raw }}</td>
+            {% endif %}
+            <td>{{ movement.amount|movement|raw }}</td>
+            {% if showSteps is defined and showSteps %}
+                <td>{{ account.amountUntil(movement, false)|movement|raw }}</td>
+            {% endif %}
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="3">Keine Umsätze verfügbar.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

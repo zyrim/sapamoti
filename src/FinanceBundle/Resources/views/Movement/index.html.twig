@@ -3,30 +3,4 @@
     <a class="btn btn-default {{ routeMatch('finance_movements', 'active', {'show': 'plus'}) }}" href="{{ url('finance_movements', {'financeAccountId': account.financeAccountId, 'show': 'plus'}) }}">Plus</a>
     <a class="btn btn-default {{ routeMatch('finance_movements', 'active', {'show': 'minus'}) }}" href="{{ url('finance_movements', {'financeAccountId': account.financeAccountId, 'show': 'minus'}) }}">Minus</a>
 </div>
-<table class="table table-bordered table-responsive">
-    <thead>
-    <tr>
-        <th>Datum</th>
-        <th>Umsatz</th>
-        <th>Summe</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for movement in movements %}
-        {% if movement.amount < 0 %}
-            {% set class = 'alert alert-danger' %}
-        {% elseif movement.amount > 0 %}
-            {% set class = 'alert alert-success' %}
-        {% endif %}
-        <tr class="{{ class }}">
-            <td>{{ movement.date|date('d.m.Y') }}</td>
-            <td><a href="{{ url('finance_movements_edit', {'financeMovementId': movement.financeMovementId}) }}">{{ movement.description }}</a></td>
-            <td>{{ movement.amount }}</td>
-        </tr>
-    {% else %}
-        <tr>
-            <td colspan="3">Keine Umsätze verfügbar.</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{{ include('@Finance/Account/_movementsTable.html.twig') }}

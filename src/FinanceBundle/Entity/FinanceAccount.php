@@ -111,7 +111,10 @@ class FinanceAccount
     }
 
     /**
-     * @param bool $dontCalulate
+     * @param bool $dontCalulate If set to true,
+     * the current actual value without calculation is returned
+     *
+     * @param null|FinanceMovement $movement
      * @return float
      */
     public function getAmount(bool $dontCalulate = false): float
@@ -149,6 +152,30 @@ class FinanceAccount
                 ) {
                     $amount += $movement->getAmount();
                 }
+            }
+        }
+
+        return $amount;
+    }
+
+    /**
+     * Calculate the value of all previous movements until the current.
+     *
+     * @param FinanceMovement $movement Movement before or until the amount should be calculated to
+     * @param bool $before True = Dont include the movement's value. False = include it
+     * @return float
+     */
+    public function getAmountUntil(FinanceMovement $movement, bool $before)
+    {
+        $amount = $this->amount;
+
+        foreach ($this->getMovements() as $financeMovement) {
+            if ($before && $movement->getFinanceMovementId() > $financeMovement->getFinanceMovementId()) {
+                // Amount before the current movement
+                $amount += $financeMovement->getAmount();
+            } elseif (!$before && $movement->getFinanceMovementId() >= $financeMovement->getFinanceMovementId()) {
+                // Amount including the current movement
+                $amount += $financeMovement->getAmount();
             }
         }
 
