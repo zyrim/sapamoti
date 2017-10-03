@@ -12,10 +12,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>{{ account.amount(true)|movement|raw }}</td>
-                <td>{{ account.movementsAmountSum|movement|raw }}</td>
-                <td>{{ account.amount|movement|raw }}</td>
+            <tr class="status">
+                <td class="currentAmount">{{ account.amount(true)|movement|raw }}</td>
+                <td class="movementsAmount">{{ account.movementsAmountSum|movement|raw }}</td>
+                <td class="amountAfter">{{ account.amount|movement|raw }}</td>
             </tr>
             </tbody>
         </table>

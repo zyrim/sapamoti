@@ -30,6 +30,30 @@ class AccountController extends Controller
         /** @var FinanceAccount $account */
         $account = $this->getEntity();
         $em = $this->entityManager();
+
+        /**
+         * @todo:
+         * Not tested, because no movements available from earlier
+         * than october.
+         * Test this at the beginning of november.
+         */
+        // When in new month
+        if (date('Y-m-d') >= date('Y-m-01')) {
+            $amount = $account->getAmount(true);
+
+            foreach ($account->getMovements() as $movement) {
+                // Add the amount of all movements from the previous month
+                // to the current amount of the account
+                if ($movement->getDate()->format('Y-m-d') <= date('Y-m-01')) {
+                    $amount += $movement->getAmount();
+                }
+            }
+
+            // and update it
+            $account->setAmount($amount);
+            $em->flush($account);
+        }
+
         $values = [
             'account' => $account,
             'fixed' => $account->getFixedMovements(),

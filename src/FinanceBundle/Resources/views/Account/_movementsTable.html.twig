@@ -1,6 +1,7 @@
-<table class="table table-bordered table-responsive">
+<table class="table table-bordered table-responsive movements">
     <thead>
     <tr>
+        <th></th>
         <th>Datum</th>
         <th>Umsatz</th>
         {% if showSteps is defined and showSteps %}
@@ -23,15 +24,25 @@
                 {% set class = 'alert alert-success' %}
             {% endif %}
         {% endif %}
-        <tr class="{{ class }}">
+        <tr class="{{ class }} movement {{ movement.financeMovementId }}">
+            <td><input type="checkbox"  onclick="calculate(this, {{ movement.financeMovementId }});" checked></td>
             <td>{{ movement.date|date('d.m.Y') }}</td>
             <td><a href="{{ url('finance_movements_edit', {'financeMovementId': movement.financeMovementId}) }}">{{ movement.description }}</a></td>
             {% if showSteps is defined and showSteps %}
-                <td>{{ account.amountUntil(movement, true)|movement|raw }}</td>
+                <td class="amountBefore">{{ account.amountUntil(movement, true)|movement|raw }}</td>
             {% endif %}
-            <td>{{ movement.amount|movement|raw }}</td>
+            <td class="amount">
+                {% if movement.fixed %}
+                    <span class="glyphicon glyphicon-calendar"></span>
+                {% elseif movement.amount > 0 %}
+                    <span class="glyphicon glyphicon-chevron-up"></span>
+                {% elseif movement.amount < 0 %}
+                    <span class="glyphicon glyphicon-chevron-down"></span>
+                {% endif %}
+                {{ movement.amount|movement|raw }}
+            </td>
             {% if showSteps is defined and showSteps %}
-                <td>{{ account.amountUntil(movement, false)|movement|raw }}</td>
+                <td class="amountAfter">{{ account.amountUntil(movement, false)|movement|raw }}</td>
             {% endif %}
         </tr>
     {% else %}
