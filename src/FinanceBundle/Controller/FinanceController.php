@@ -4,6 +4,7 @@
  *
  * @namespace
  */
+
 namespace FinanceBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
@@ -12,6 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class FinanceController
+ *
+ * This controller is the main entry point
+ * to the finance bundle.
  *
  * @package FinanceBundle
  */
@@ -27,16 +31,17 @@ class FinanceController extends AbstractController
     public function indexAction()
     {
         $accountsArray = [];
+
         /** @var \FinanceBundle\Repository\FinanceAccountRepository $repo */
-        $repo = $this->entityManager()->getRepository(\FinanceBundle\Entity\FinanceAccount::class);
+        $repo     = $this->entityManager()->getRepository(\FinanceBundle\Entity\FinanceAccount::class);
         $accounts = $repo->findBy(['user' => $this->getUser()]);
 
         /** @var \FinanceBundle\Entity\FinanceAccount $account */
         foreach ($accounts as $account) {
             $accountsArray[] = [
-                'account' => $account,
+                'account'   => $account,
                 'movements' => $account->getMovements()->count(),
-                'amount' => $account->getAmount()
+                'amount'    => $account->getAmount()
             ];
         }
 

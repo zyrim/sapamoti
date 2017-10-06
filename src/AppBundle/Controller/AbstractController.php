@@ -1,46 +1,74 @@
 <?php
+/**
+ * AppBundle
+ *
+ * @namespace
+ */
 
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
-use Doctrine\ORM\{EntityManager, EntityRepository};
+use Doctrine\ORM\{
+    EntityManager, EntityRepository
+};
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class AbstractController
  *
- * @package AppBundle\Controller
+ * Abstract class for all controllers to provide
+ * more convenient ways for example to access the entitymanager,
+ * or a currently requested entity by its id.
+ *
+ * @package AppBundle
  */
 abstract class AbstractController extends Controller
 {
     /**
+     * Request instance used to receive
+     * parameters.
+     *
      * @var Request
      */
     protected $request;
 
     /**
+     * A entity containing data
+     * of the currently logged-in user.
+     *
      * @var User
      */
     protected $user;
 
     /**
+     * EntityManager used for all database interactions.
+     *
      * @var EntityManager
      */
     protected $em;
 
     /**
-     * @var EntityRepository
+     * An array of EntityRepository objects
+     * to store already used EntityRepositories.
+     *
+     * @var EntityRepository[]
      */
-    protected $repository;
+    protected $repositories;
 
     /**
+     * An object mapped by doctrine
+     * specified and retrieved by its primary key,
+     * delivered per Request.
+     *
      * @var object
      */
     protected $entity;
 
     /**
-     * @return EntityManager
+     * Lazy-load the EntityManager.
+     *
+     * @return EntityManager The currently active EntityManager
      */
     protected function entityManager(): EntityManager
     {
@@ -52,17 +80,32 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @param string $repositoryClass
-     * @return EntityRepository
+     * Lazy-load a requested EntityRepository
+     * and store it into the $repositories array
+     * for later use.
+     *
+     * @param string $repositoryClass The requested entity name
+     * @return EntityRepository The requested EntityRepository
      */
     protected function repository(string $repositoryClass): EntityRepository
     {
-        return $this->entityManager()->getRepository($repositoryClass);
+        if (!array_key_exists($repositoryClass, $this->repositories)) {
+            $this->repositories[$repositoryClass] = $this->entityManager()->getRepository($repositoryClass);
+        }
+
+        return $this->repositories[$repositoryClass];
     }
 
     /**
-     * @param int $id
-     * @return null|object
+     * When a request sends a parameter with a naming-convention
+     * like {entityName}Id and an entity with a primary-key
+     * called exactly like it, lying under a namespace
+     * of {CurrentControllerBundle}\Entity and the parameter
+     * contains an actual record-id, the record will be loaded
+     * from its correct repository and the entity will be returned.
+     *
+     * @param int $id The id of of entity, if set in parameter-list of action
+     * @return null|object The requested entity
      */
     protected function getEntity(int $id = 0)
     {

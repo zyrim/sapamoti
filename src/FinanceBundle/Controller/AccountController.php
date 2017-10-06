@@ -2,16 +2,25 @@
 
 namespace FinanceBundle\Controller;
 
-use FinanceBundle\Entity\{FinanceAccount, FinanceMovement};
+use FinanceBundle\Entity\{
+    FinanceAccount, FinanceMovement
+};
 use AppBundle\Form\FinanceMovementForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Controller\AbstractController as Controller;
-use Symfony\Component\Form\Extension\Core\Type\{NumberType, SubmitType, TextType};
+use Symfony\Component\Form\Extension\Core\Type\{
+    NumberType, SubmitType, TextType
+};
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\{Request, Response, RedirectResponse};
+use Symfony\Component\HttpFoundation\{
+    Request, Response, RedirectResponse
+};
 
 /**
  * Class AccountController
+ *
+ * This controller handles all pages responsible
+ * for finance account administration.
  *
  * @package FinanceBundle\Controller
  */
@@ -29,7 +38,7 @@ class AccountController extends Controller
     {
         /** @var FinanceAccount $account */
         $account = $this->getEntity();
-        $em = $this->entityManager();
+        $em      = $this->entityManager();
 
         /**
          * @todo:
@@ -55,8 +64,8 @@ class AccountController extends Controller
         }
 
         $values = [
-            'account' => $account,
-            'fixed' => $account->getFixedMovements(),
+            'account'   => $account,
+            'fixed'     => $account->getFixedMovements(),
             'movements' => []
         ];
 
@@ -75,8 +84,7 @@ class AccountController extends Controller
             ->setAmount(0.0)
             ->setDescription('')
             ->setDate(new \DateTime())
-            ->setFixed(false)
-        ;
+            ->setFixed(false);
         $form = $this->createForm(FinanceMovementForm::class, $movement);
 
         $form->handleRequest($request);
@@ -116,7 +124,7 @@ class AccountController extends Controller
      */
     public function addAction(Request $request)
     {
-        $em = $this->entityManager();
+        $em   = $this->entityManager();
         $form = $this->createFormBuilder()
             ->add('_name', TextType::class)
             ->add('_amount', NumberType::class)
@@ -126,13 +134,12 @@ class AccountController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $data    = $form->getData();
             $account = new FinanceAccount();
             $account
                 ->setUser($this->getUser())
                 ->setName($data['_name'])
-                ->setAmount($data['_amount'])
-            ;
+                ->setAmount($data['_amount']);
 
             $em->persist($account);
             $em->flush();
@@ -155,18 +162,17 @@ class AccountController extends Controller
     {
         /** @var FinanceAccount $account */
         $account = $this->getEntity();
-        $em = $this->entityManager();
-        $form = $this->createFormBuilder()
+        $em      = $this->entityManager();
+        $form    = $this->createFormBuilder()
             ->add('_name', TextType::class, ['label' => 'Bezeichnung'])
             ->add('_amount', NumberType::class, ['label' => 'Aktuelle Summe'])
             ->add('_save', SubmitType::class, ['label' => 'Speichern'])
             ->add('_remove', SubmitType::class, [
                 'label' => 'Löschen',
-                'attr' => [
+                'attr'  => [
                     'class' => 'btn btn-danger'
                 ]
-            ]);
-        ;
+            ]);;
         $form->get('_name')->setData($account->getName());
         $form->get('_amount')->setData($account->getAmount(true));
         $form = $form->getForm();
@@ -189,9 +195,9 @@ class AccountController extends Controller
         }
 
         return $this->render('@Finance/Account/finance.html.twig', [
-            'account' => $account,
+            'account'  => $account,
             'template' => '@Finance/Account/edit.html.twig',
-            'form' => $form->createView()
+            'form'     => $form->createView()
         ]);
     }
 }

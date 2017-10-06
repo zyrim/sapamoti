@@ -1,4 +1,9 @@
 <?php
+/**
+ * AppBundle
+ *
+ * @namespace
+ */
 
 namespace AppBundle\Security;
 
@@ -6,40 +11,61 @@ use AppBundle\Entity\User;
 use AppBundle\Form\LoginForm;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\{
+    Request, RedirectResponse
+};
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
-use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Security\Core\{
+    Authentication\Token\TokenInterface,
+    Encoder\UserPasswordEncoderInterface,
+    Security,
+    User\UserInterface,
+    User\UserProviderInterface
+};
+use Symfony\Component\Security\{
+    Guard\Authenticator\AbstractFormLoginAuthenticator,
+    Http\Util\TargetPathTrait
+};
 
 /**
  * Class LoginFormAuthenticator
+ *
+ * This class is responsible for handling
+ * the login form submission and
+ * checking on each page if the user
+ * is logged in with valid data.
  *
  * @package AppBundle\Security
  */
 class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
     /**
+     * FormFactoryInterface used to create a instance of
+     * the LoginForm to handle the request.
+     *
      * @var FormFactoryInterface
      */
     protected $formFactory;
 
     /**
+     * EntityManagerInterface used to load
+     * the user entity from the db.
+     *
      * @var EntityManagerInterface
      */
     protected $em;
 
     /**
+     * RouterInterface used to generate urls.
+     *
      * @var RouterInterface
      */
     protected $router;
 
     /**
+     * UserPasswordEncoderInterface used to check the
+     * user credentials.
+     *
      * @var UserPasswordEncoderInterface
      */
     protected $passwordEncoder;
@@ -47,13 +73,24 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     /**
      * LoginFormAuthenticator constructor.
      *
-     * @param FormFactoryInterface $formFactory
+     * @param FormFactoryInterface         $formFactory     FormFactoryInterface used to create a instance of
+     *                                                      the LoginForm to handle the request.
+     * @param EntityManagerInterface       $em              EntityManagerInterface used to load
+     *                                                      the user entity from the db.
+     * @param RouterInterface              $router          RouterInterface used to generate urls.
+     * @param UserPasswordEncoderInterface $passwordEncoder UserPasswordEncoderInterface used to check the
+     *                                                      user credentials.
      */
-    public function __construct(FormFactoryInterface $formFactory, EntityManagerInterface $em, RouterInterface $router, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $em,
+        RouterInterface $router,
+        UserPasswordEncoderInterface $passwordEncoder
+    )
     {
-        $this->formFactory = $formFactory;
-        $this->em = $em;
-        $this->router = $router;
+        $this->formFactory     = $formFactory;
+        $this->em              = $em;
+        $this->router          = $router;
         $this->passwordEncoder = $passwordEncoder;
     }
 
@@ -111,9 +148,11 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     use TargetPathTrait;
 
     /**
-     * @param Request $request
+     * Handles redirection on successful authentication.
+     *
+     * @param Request        $request
      * @param TokenInterface $token
-     * @param string $providerKey
+     * @param string         $providerKey
      * @return RedirectResponse
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

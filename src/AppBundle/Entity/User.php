@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FinanceBundle\Entity\FinanceAccount;
 use Symfony\Component\Security\Core\User\UserInterface;
+use TimeBundle\Entity\TimePlan;
 
 /**
  * Class User
@@ -65,6 +66,13 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="FinanceBundle\Entity\FinanceAccount", mappedBy="user")
      */
     private $financeAccounts;
+
+    /**
+     * @var ArrayCollection|TimePlan[]
+     *
+     * @ORM\OneToMany(targetEntity="TimeBundle\Entity\TimePlan", mappedBy="user")
+     */
+    private $timePlans;
 
     /**
      * @var \DateTime
@@ -270,6 +278,28 @@ class User implements UserInterface
     public function setFinanceAccounts($financeAccounts)
     {
         $this->financeAccounts = $financeAccounts;
+
+        return $this;
+    }
+
+    /**
+     * Get timeplans
+     *
+     * @return ArrayCollection|TimePlan[]
+     */
+    public function getTimePlans()
+    {
+        return $this->timePlans;
+    }
+
+    /**
+     * @param ArrayCollection|TimePlan[] $timePlans
+     *
+     * @return User
+     */
+    public function setTimePlans($timePlans): User
+    {
+        $this->timePlans = $timePlans;
 
         return $this;
     }
