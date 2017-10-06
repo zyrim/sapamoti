@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12">
             <h1><a href="{{ url('finance_account', {'financeAccountId': account.financeAccountId}) }}">{{ account.name }}</a></h1>
-            <h2>{{ account.amount(true)|movement|raw }} (nach Umsätzen: {{ account.amount|movement|raw }})</h2>
+            <h2>{{ account.amount|movement|raw }} (nach Umsätzen: {{ account.totalAmount|movement|raw }})</h2>
         </div>
     </div>
     <div class="row">

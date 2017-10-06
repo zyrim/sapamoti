@@ -13,9 +13,9 @@
             </thead>
             <tbody>
             <tr class="status">
-                <td class="currentAmount">{{ account.amount(true)|movement|raw }}</td>
+                <td class="currentAmount">{{ account.amount|movement|raw }}</td>
                 <td class="movementsAmount">{{ account.movementsAmountSum|movement|raw }}</td>
-                <td class="amountAfter">{{ account.amount|movement|raw }}</td>
+                <td class="amountAfter">{{ account.totalAmount|movement|raw }}</td>
             </tr>
             </tbody>
         </table>

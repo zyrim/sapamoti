@@ -122,11 +122,11 @@ class FinanceAccount
      */
     public function getAmount(bool $dontCalulate = false): float
     {
-        if ($dontCalulate) {
-            return $this->getTotalAmount();
+        if (!$dontCalulate) {
+            return round($this->amount, 2);
         }
 
-        return $this->amount;
+        return $this->getTotalAmount();
     }
 
     /**
@@ -140,7 +140,7 @@ class FinanceAccount
         $amount = $this->amount;
 
         if (!$this->getMovements()->count()) {
-            return $amount;
+            return round($amount, 2);
         }
 
         $fixed = [];
@@ -169,7 +169,7 @@ class FinanceAccount
             }
         }
 
-        return $amount;
+        return round($amount, 2);
     }
 
     /**
