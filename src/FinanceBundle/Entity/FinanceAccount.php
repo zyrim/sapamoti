@@ -3,6 +3,7 @@
 namespace FinanceBundle\Entity;
 
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -111,6 +112,8 @@ class FinanceAccount
     }
 
     /**
+     * @deprecated Remove uses with parameter.
+     *
      * @param bool $dontCalulate If set to true,
      * the current actual value without calculation is returned
      *
@@ -119,11 +122,22 @@ class FinanceAccount
      */
     public function getAmount(bool $dontCalulate = false): float
     {
-        $amount = $this->amount;
-
         if ($dontCalulate) {
-            return $amount;
+            return $this->getTotalAmount();
         }
+
+        return $this->amount;
+    }
+
+    /**
+     * Return the current amount
+     * added together with all movements amounts (if available).
+     *
+     * @return float
+     */
+    public function getTotalAmount()
+    {
+        $amount = $this->amount;
 
         if (!$this->getMovements()->count()) {
             return $amount;
@@ -148,7 +162,7 @@ class FinanceAccount
                 if (
                     $movement->getAmount() < 0
                     || ($movement->getAmount() > 0
-                    && date('Y-m-d') >= $movement->getDate()->format('Y-m-d'))
+                        && date('Y-m-d') >= $movement->getDate()->format('Y-m-d'))
                 ) {
                     $amount += $movement->getAmount();
                 }
@@ -228,6 +242,14 @@ class FinanceAccount
     public function getMovements()
     {
         return $this->movements;
+    }
+
+    /**
+     * @see ArrayCollection::count()
+     */
+    public function countMovements()
+    {
+        return $this->movements->count();
     }
 
     /**

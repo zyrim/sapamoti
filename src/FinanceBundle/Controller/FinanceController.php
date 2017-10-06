@@ -30,22 +30,11 @@ class FinanceController extends AbstractController
      */
     public function indexAction()
     {
-        $accountsArray = [];
-
         /** @var \FinanceBundle\Repository\FinanceAccountRepository $repo */
         $repo     = $this->entityManager()->getRepository(\FinanceBundle\Entity\FinanceAccount::class);
         $accounts = $repo->findBy(['user' => $this->getUser()]);
 
-        /** @var \FinanceBundle\Entity\FinanceAccount $account */
-        foreach ($accounts as $account) {
-            $accountsArray[] = [
-                'account'   => $account,
-                'movements' => $account->getMovements()->count(),
-                'amount'    => $account->getAmount()
-            ];
-        }
-
-        return $this->render('@Finance/Finance/index.html.twig', ['accounts' => $accountsArray]);
+        return $this->render('@Finance/Finance/index.html.twig', ['accounts' => $accounts]);
     }
 
 }
