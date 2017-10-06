@@ -54,7 +54,7 @@ abstract class AbstractController extends Controller
      *
      * @var EntityRepository[]
      */
-    protected $repositories;
+    protected $repositories = [];
 
     /**
      * An object mapped by doctrine
