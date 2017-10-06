@@ -46,9 +46,13 @@ class AccountController extends Controller
          * than october.
          * Test this at the beginning of november.
          */
-        // When in new month
-        if (date('Y-m-d') >= date('Y-m-01')) {
-            $amount = $account->getAmount(true);
+        $endOfMonth = new \DateTime();
+        $interval   = new \DateInterval('PT1M');
+        $endOfMonth->add($interval);
+
+        // When at the end of month or new month
+        if (date('Y-m-d') >= $endOfMonth->format('Y-m-t')) {
+            $amount = $account->getAmount();
 
             foreach ($account->getMovements() as $movement) {
                 // Add the amount of all movements from the previous month
