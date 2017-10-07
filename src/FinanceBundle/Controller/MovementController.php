@@ -4,10 +4,14 @@ namespace FinanceBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form\FinanceMovementForm;
-use FinanceBundle\Entity\{FinanceAccount, FinanceMovement};
+use FinanceBundle\Entity\{
+    FinanceAccount, FinanceMovement
+};
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\HttpFoundation\{Request, Response, RedirectResponse};
+use Symfony\Component\HttpFoundation\{
+    Request, Response, RedirectResponse
+};
 
 /**
  * Class MovementController
@@ -27,9 +31,9 @@ class MovementController extends AbstractController
     public function indexAction(Request $request)
     {
         /** @var FinanceAccount $account */
-        $account = $this->getEntity();
+        $account   = $this->getEntity();
         $movements = $account->getMovements();
-        $show = $request->get('show', 'all');
+        $show      = $request->get('show', 'all');
 
         if ($show != 'all') {
             $movements = $movements->filter(function (FinanceMovement $movement) use ($show) {
@@ -42,9 +46,9 @@ class MovementController extends AbstractController
         }
 
         return $this->render('@Finance/Account/finance.html.twig', [
-            'account' => $account,
+            'account'   => $account,
             'movements' => $movements,
-            'template' => '@Finance/Movement/index.html.twig',
+            'template'  => '@Finance/Movement/index.html.twig',
         ]);
     }
 
@@ -60,14 +64,14 @@ class MovementController extends AbstractController
     {
         /** @var FinanceMovement $movement */
         $movement = $this->getEntity();
-        $account = $movement->getAccount();
+        $account  = $movement->getAccount();
 
         $form = $this->createForm(FinanceMovementForm::class, $movement)
             ->remove('_save')
             ->add('_save', SubmitType::class, ['label' => 'Speichern'])
             ->add('_remove', SubmitType::class, [
                 'label' => 'Löschen',
-                'attr' => [
+                'attr'  => [
                     'class' => 'btn btn-danger'
                 ]
             ]);
@@ -87,9 +91,9 @@ class MovementController extends AbstractController
         }
 
         return $this->render('@Finance/Account/finance.html.twig', [
-            'account' => $account,
+            'account'  => $account,
             'template' => '@Finance/Account/edit.html.twig',
-            'form' => $form->createView()
+            'form'     => $form->createView()
         ]);
     }
 
@@ -100,8 +104,8 @@ class MovementController extends AbstractController
     {
         /** @var FinanceAccount $account */
         $account = $this->getEntity();
-        $values = [
-            'account' => $account,
+        $values  = [
+            'account'  => $account,
             'template' => '@Finance/Movement/strategize.html.twig'
         ];
 

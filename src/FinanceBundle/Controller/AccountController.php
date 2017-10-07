@@ -27,6 +27,11 @@ use Symfony\Component\HttpFoundation\{
 class AccountController extends Controller
 {
     /**
+     * @var FinanceAccount
+     */
+    protected $entity;
+
+    /**
      * Show a finance account with all its movements.
      *
      * @param Request $request
@@ -36,7 +41,6 @@ class AccountController extends Controller
      */
     public function showAction(Request $request)
     {
-        /** @var FinanceAccount $account */
         $account = $this->getEntity();
         $em      = $this->entityManager();
 
@@ -164,7 +168,6 @@ class AccountController extends Controller
      */
     public function editAction(Request $request)
     {
-        /** @var FinanceAccount $account */
         $account = $this->getEntity();
         $em      = $this->entityManager();
         $form    = $this->createFormBuilder()
@@ -178,7 +181,7 @@ class AccountController extends Controller
                 ]
             ]);;
         $form->get('_name')->setData($account->getName());
-        $form->get('_amount')->setData($account->getAmount(true));
+        $form->get('_amount')->setData($account->getAmount());
         $form = $form->getForm();
 
         $form->handleRequest($request);
