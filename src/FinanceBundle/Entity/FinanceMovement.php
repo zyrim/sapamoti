@@ -26,7 +26,7 @@ class FinanceMovement
     /**
      * @var FinanceAccount
      *
-     * @ORM\ManyToOne(targetEntity="\FinanceBundle\Entity\FinanceAccount", inversedBy="movements")
+     * @ORM\ManyToOne(targetEntity="\FinanceBundle\Entity\FinanceAccount", inversedBy="movements", cascade={"remove"})
      * @ORM\JoinColumn(name="finance_account_id", referencedColumnName="finance_account_id")
      */
     protected $account;

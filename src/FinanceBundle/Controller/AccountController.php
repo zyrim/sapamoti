@@ -185,7 +185,7 @@ class AccountController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('_remove')->isClicked()) {
-                $this->repository(FinanceAccount::class)->remove($account);
+                $em->remove($account);
                 $em->flush();
 
                 return $this->redirectToRoute('finance_index');

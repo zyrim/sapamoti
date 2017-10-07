@@ -56,6 +56,22 @@ class FinanceAccount
     private $movements;
 
     /**
+     * @var ArrayCollection|Status[]
+     *
+     * @ORM\OneToMany(targetEntity="FinanceBundle\Entity\Status", mappedBy="account", cascade={"persist", "remove"})
+     */
+    private $status;
+
+    /**
+     * FinanceAccount constructor.
+     */
+    public function __construct()
+    {
+        $this->setMovements(new ArrayCollection());
+        $this->setStatus(new ArrayCollection());
+    }
+
+    /**
      * Get id
      *
      * @return int
@@ -284,6 +300,38 @@ class FinanceAccount
         }
 
         return $amount;
+    }
+
+    /**
+     * @param ArrayCollection|Status[] $status
+     * @return FinanceAccount
+     */
+    public function setStatus($status): FinanceAccount
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @param Status $status
+     * @return FinanceAccount
+     */
+    public function addStatus(Status $status): FinanceAccount
+    {
+        if (!$this->status->contains($status)) {
+            $this->status->add($status);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|Status[]
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }
 
