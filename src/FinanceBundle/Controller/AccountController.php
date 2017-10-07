@@ -47,7 +47,7 @@ class AccountController extends Controller
          * Test this at the beginning of november.
          */
         $endOfMonth = new \DateTime();
-        $interval   = new \DateInterval('PT1M');
+        $interval   = new \DateInterval('P1M');
         $endOfMonth->add($interval);
 
         // When at the end of month or new month
