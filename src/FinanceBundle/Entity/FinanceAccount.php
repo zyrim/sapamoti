@@ -253,11 +253,24 @@ class FinanceAccount
     /**
      * Get movements
      *
+     * @param string $type Type to filter the movements
      * @return \Doctrine\Common\Collections\ArrayCollection|FinanceMovement[]
      */
-    public function getMovements()
+    public function getMovements(string $type = 'all')
     {
-        return $this->movements;
+        $movements = $this->movements;
+
+        if ($type != 'all') {
+            $movements = $this->movements->filter(function (FinanceMovement $movement) use ($type) {
+                if ($type == FinanceMovement::MOVEMENT_PLUS) {
+                    return $movement->getAmount() > 0;
+                } elseif ($type == FinanceMovement::MOVEMENT_MINUS) {
+                    return $movement->getAmount() < 0;
+                }
+            });
+        }
+
+        return $movements;
     }
 
     /**

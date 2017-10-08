@@ -32,18 +32,8 @@ class MovementController extends AbstractController
     {
         /** @var FinanceAccount $account */
         $account   = $this->getEntity();
-        $movements = $account->getMovements();
         $show      = $request->get('show', 'all');
-
-        if ($show != 'all') {
-            $movements = $movements->filter(function (FinanceMovement $movement) use ($show) {
-                if ($show == FinanceMovement::MOVEMENT_PLUS) {
-                    return $movement->getAmount() > 0;
-                } elseif ($show == FinanceMovement::MOVEMENT_MINUS) {
-                    return $movement->getAmount() < 0;
-                }
-            });
-        }
+        $movements = $account->getMovements($show);
 
         return $this->render('@Finance/Account/finance.html.twig', [
             'account'   => $account,
