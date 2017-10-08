@@ -14,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FinanceMovement
 {
+    const MOVEMENT_PLUS  = 'plus';
+    const MOVEMENT_MINUS = 'minus';
+
     /**
      * @var int
      *

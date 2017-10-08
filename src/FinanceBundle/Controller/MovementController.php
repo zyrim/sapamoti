@@ -37,9 +37,9 @@ class MovementController extends AbstractController
 
         if ($show != 'all') {
             $movements = $movements->filter(function (FinanceMovement $movement) use ($show) {
-                if ($show == 'plus') {
+                if ($show == FinanceMovement::MOVEMENT_PLUS) {
                     return $movement->getAmount() > 0;
-                } elseif ($show == 'minus') {
+                } elseif ($show == FinanceMovement::MOVEMENT_MINUS) {
                     return $movement->getAmount() < 0;
                 }
             });
