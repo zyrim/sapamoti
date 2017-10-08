@@ -2,4 +2,3 @@ services:
     FinanceBundle\Doctrine\FinanceAccountListener:
         tags:
             - { name: doctrine.event_listener, event: prePersist, lazy: true }
-            - { name: doctrine.event_listener, event: preUpdate, lazy: true }

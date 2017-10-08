@@ -59,7 +59,14 @@ class FinanceAccountRepositoryTest extends \Symfony\Bundle\FrameworkBundle\Test\
         $testAmount2 = 200;
         $account->setAmount($testAmount2);
 
-        $this->em->flush($account);
+        // Create a new status "by hand"
+        $status = new Status($account);
+        $this->em->persist($status);
+        $this->em->flush($status);
+
+        $account->addStatus($status);
+
+        $this->em->flush();
 
         // Check if a new Status object has been added
         $this->assertCount(2, $account->getStatus(),
