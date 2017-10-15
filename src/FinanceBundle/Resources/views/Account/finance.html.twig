@@ -3,13 +3,13 @@
 {% block body %}
     <div class="row">
         <div class="col-lg-12">
-            <h1><a href="{{ url('finance_account', {'financeAccountId': account.financeAccountId}) }}">{{ account.name }}</a></h1>
-            <h2>{{ account.amount|movement|raw }} (nach Umsätzen: {{ account.totalAmount|movement|raw }})</h2>
+            {{ include('@Finance/Account/_statusTable.html.twig') }}
         </div>
     </div>
     <div class="row">
         <div class="col-lg-2">
             <div class="list-group">
+                <a class="list-group-item {{ routeMatch('finance_movements_add') }}" href="{{ url('finance_movements_add', {'financeAccountId': account.financeAccountId}) }}">Umsatz hinzufügen</a>
                 <a class="list-group-item {{ routeMatch('finance_account_edit') }}" href="{{ url('finance_account_edit', {'financeAccountId': account.financeAccountId}) }}">Konto bearbeiten</a>
                 <a class="list-group-item {{ routeMatch('finance_movements') }}" href="{{ url('finance_movements', {'financeAccountId': account.financeAccountId}) }}">Umsätze</a>
                 <a class="list-group-item {{ routeMatch('finance_movements_strategize') }}" href="{{ url('finance_movements_strategize', {'financeAccountId': account.financeAccountId}) }}">Kostenplanung</a>

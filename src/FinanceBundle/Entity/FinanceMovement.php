@@ -62,6 +62,15 @@ class FinanceMovement
      */
     protected $fixed;
 
+    /**
+     * FinanceMovement constructor.
+     *
+     * @param FinanceAccount|null $account
+     */
+    public function __construct(FinanceAccount $account = null)
+    {
+        $this->account = $account;
+    }
 
     /**
      * Get id

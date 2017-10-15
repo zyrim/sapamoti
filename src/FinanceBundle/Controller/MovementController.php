@@ -43,6 +43,56 @@ class MovementController extends AbstractController
     }
 
     /**
+     * @Route("finance/movements/{financeAccountId}/add", name="finance_movements_add")
+     */
+    public function addAction()
+    {
+        /** @var FinanceAccount $account */
+        $account = $this->getEntity();
+
+        /**
+         * @todo:
+         * Not tested, because no movements available from earlier
+         * than october.
+         * Test this at the beginning of november.
+         */
+        $endOfMonth = new \DateTime();
+        $interval   = new \DateInterval('P1M');
+        $endOfMonth->add($interval);
+
+        // When at the end of month or new month
+        if (date('Y-m-d') >= $endOfMonth->format('Y-m-t')) {
+            $amount = $account->getAmount();
+
+            foreach ($account->getMovements() as $movement) {
+                // Add the amount of all movements from the previous month
+                // to the current amount of the account
+                if ($movement->getDate()->format('Y-m-d') <= date('Y-m-01')) {
+                    $amount += $movement->getAmount();
+                }
+            }
+
+            // and update it
+            $account->setAmount($amount);
+            $this->entityManager()->flush($account);
+        }
+
+        $movement = new FinanceMovement($account);
+        $movement
+            ->setDescription('')
+            ->setAmount(0.0)
+            ->setDate(new \DateTime());
+
+        $form = $this->createForm(FinanceMovementForm::class, $movement)->createView();
+
+        return $this->render('@Finance/Account/finance.html.twig', [
+            'template' => '@Finance/Movement/add.html.twig',
+            'account'  => $account,
+            'form'     => $form
+        ]);
+    }
+
+    /**
      * Edit (or delete) a movement.
      *
      * @param Request $request
