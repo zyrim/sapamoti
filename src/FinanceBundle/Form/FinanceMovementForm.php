@@ -1,17 +1,20 @@
 <?php
 
-namespace AppBundle\Form;
+namespace FinanceBundle\Form;
 
+use FinanceBundle\Entity\FinanceMovement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\{
     TextareaType, NumberType, DateType, CheckboxType, SubmitType
 };
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 /**
  * Class FinanceMovementForm
  *
- * @package AppBundle\Form
+ * @package FinanceBundle
  */
 class FinanceMovementForm extends AbstractType
 {
@@ -28,5 +31,23 @@ class FinanceMovementForm extends AbstractType
             ->add('_fixed', CheckboxType::class, ['label' => 'Regelmäßig', 'required' => false])
             ->add('_save', SubmitType::class, ['label' => 'Hinzufügen'])
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            if ($data instanceof FinanceMovement && $data->getFinanceMovementId()) {
+                $form
+                    ->add('_editAmount', NumberType::class, [
+                    'label'    => 'Betrag erweitern',
+                    'required' => false,
+                    'mapped'   => false
+                    ])
+                    ->add('_remove', SubmitType::class, [
+                        'label' => 'Entfernen',
+                        'attr' => ['class' => 'btn btn-danger']
+                    ]);
+            }
+        });
     }
 }

@@ -3,12 +3,11 @@
 namespace FinanceBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Form\FinanceMovementForm;
+use FinanceBundle\Form\FinanceMovementForm;
 use FinanceBundle\Entity\{
     FinanceAccount, FinanceMovement
 };
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\{
     Request, Response, RedirectResponse
 };
@@ -106,23 +105,18 @@ class MovementController extends AbstractController
         $movement = $this->getEntity();
         $account  = $movement->getAccount();
 
-        $form = $this->createForm(FinanceMovementForm::class, $movement)
-            ->remove('_save')
-            ->add('_save', SubmitType::class, ['label' => 'Speichern'])
-            ->add('_remove', SubmitType::class, [
-                'label' => 'Löschen',
-                'attr'  => [
-                    'class' => 'btn btn-danger'
-                ]
-            ]);
+        $form = $this->createForm(FinanceMovementForm::class, $movement);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->entityManager();
 
             if ($form->get('_remove')->isClicked()) {
                 $em->remove($movement);
+            } elseif (!$form->get('_editAmount')->isEmpty()) {
+                $additionalAmount = (float)$form->get('_editAmount')->getData();
+                $movement->updateAmount($additionalAmount);
             }
 
             $em->flush();
@@ -132,7 +126,8 @@ class MovementController extends AbstractController
 
         return $this->render('@Finance/Account/finance.html.twig', [
             'account'  => $account,
-            'template' => '@Finance/Account/edit.html.twig',
+            'template' => '@Finance/Movement/edit.html.twig',
+            'movement' => $movement,
             'form'     => $form->createView()
         ]);
     }

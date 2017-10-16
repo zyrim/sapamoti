@@ -117,6 +117,20 @@ class FinanceMovement
     }
 
     /**
+     * In or decrease the current movement amount+
+     * by the given value.
+     *
+     * @param float $additionalAmount Amount to add to the current amount
+     * @return FinanceMovement The FinanceMovement entity
+     */
+    public function updateAmount(float $additionalAmount): FinanceMovement
+    {
+        $this->amount += $additionalAmount;
+
+        return $this;
+    }
+
+    /**
      * Get amount
      *
      * @return float
