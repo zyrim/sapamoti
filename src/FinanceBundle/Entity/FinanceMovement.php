@@ -75,9 +75,9 @@ class FinanceMovement
     /**
      * Get id
      *
-     * @return int
+     * @return null|int
      */
-    public function getFinanceMovementId(): int
+    public function getFinanceMovementId()
     {
         return $this->financeMovementId;
     }
