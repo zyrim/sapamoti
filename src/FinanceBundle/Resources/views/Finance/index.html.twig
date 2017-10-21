@@ -5,6 +5,6 @@
     <a href="{{ url("finance_account_add") }}">Account hinzufügen</a>
     {% for account in accounts %}
         <h2><a href="{{ url('finance_movements_add', {'financeAccountId': account.financeAccountId}) }}">{{ account.name }}</a></h2>
-        <p>({{ account.countMovements }}) {{ account.amount|movement|raw }}</p>
+        <p>({{ account.countMovements }}) {{ account.totalAmount|movement|raw }}</p>
     {% endfor %}
 {% endblock %}
