@@ -61,7 +61,7 @@ class AccountController extends Controller
             $em->persist($account);
             $em->flush();
 
-            return $this->redirectToRoute('finance_account', ['financeAccountId' => $account->getFinanceAccountId()]);
+            return $this->redirectToRoute('finance_movements', ['financeAccountId' => $account->getFinanceAccountId()]);
         }
 
         return $this->render('@Finance/Account/add.html.twig', ['form' => $form->createView()]);
@@ -107,7 +107,7 @@ class AccountController extends Controller
             $account->setName($data['_name'])->setAmount($data['_amount']);
             $em->flush($account);
 
-            return $this->redirectToRoute('finance_account', ['financeAccountId' => $account->getFinanceAccountId()]);
+            return $this->redirectToRoute('finance_movements', ['financeAccountId' => $account->getFinanceAccountId()]);
         }
 
         return $this->render('@Finance/Account/finance.html.twig', [

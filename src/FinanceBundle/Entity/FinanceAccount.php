@@ -50,7 +50,7 @@ class FinanceAccount
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection|FinanceMovement[]
      *
-     * @ORM\OneToMany(targetEntity="FinanceBundle\Entity\FinanceMovement", mappedBy="account")
+     * @ORM\OneToMany(targetEntity="FinanceBundle\Entity\FinanceMovement", mappedBy="account", cascade={"remove"})
      * @ORM\OrderBy({"date" = "DESC"})
      */
     private $movements;

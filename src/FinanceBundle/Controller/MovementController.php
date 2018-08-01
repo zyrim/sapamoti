@@ -44,7 +44,7 @@ class MovementController extends AbstractController
     /**
      * @Route("finance/movements/{financeAccountId}/add", name="finance_movements_add")
      */
-    public function addAction()
+    public function addAction(Request $request)
     {
         /** @var FinanceAccount $account */
         $account = $this->getEntity();
@@ -82,12 +82,21 @@ class MovementController extends AbstractController
             ->setAmount(0.0)
             ->setDate(new \DateTime());
 
-        $form = $this->createForm(FinanceMovementForm::class, $movement)->createView();
+        $form = $this->createForm(FinanceMovementForm::class, $movement);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager()->persist($movement);
+            $this->entityManager()->flush();
+
+            return $this->redirectToRoute('finance_movements', ['financeAccountId' => $account->getFinanceAccountId()]);
+        }
 
         return $this->render('@Finance/Account/finance.html.twig', [
             'template' => '@Finance/Movement/add.html.twig',
             'account'  => $account,
-            'form'     => $form
+            'form'     => $form->createView()
         ]);
     }
 
