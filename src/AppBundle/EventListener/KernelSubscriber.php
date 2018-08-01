@@ -3,12 +3,12 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Entity\User;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\HttpKernel\{Event\FilterResponseEvent, KernelEvents};
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 
 /**
  * Class KernelSubscriber
@@ -18,39 +18,48 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class KernelSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ContainerInterface
+     * @var RouterInterface
      */
-    protected $container;
+    private $router;
 
     /**
-     * UserAgentSubscriber constructor.
-     *
-     * @param ContainerInterface $container
+     * @var TokenStorageInterface
      */
-    public function __construct(ContainerInterface $container)
+    private $storage;
+
+    /**
+     * KernelSubscriber constructor.
+     *
+     * @param RouterInterface $router
+     * @param TokenStorageInterface $storage
+     */
+    public function __construct(RouterInterface $router, TokenStorageInterface $storage)
     {
-        $this->container = $container;
+        $this->router  = $router;
+        $this->storage = $storage;
     }
 
     /**
      * Check if the user is logged in.
      * If not, return to login.
+     *
+     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        $router = $this->container->get('router');
-        $login = 'security_login';
+        $router = $this->router;
+        $login  = 'security_login';
 
         $request = $event->getRequest();
-        
+
         if ($request->get('_route') == $login) {
             return;
         }
 
-        $token = $this->container->get('security.token_storage')->getToken();
-        $response = new RedirectResponse($router->generate('security_login'));
+        $token    = $this->storage->getToken();
+        $response = new RedirectResponse($router->generate($login));
 
-        if (!$token instanceof TokenInterface) {
+        if (!$token instanceof PostAuthenticationGuardToken) {
             $event->setResponse($response);
             return;
         }
@@ -63,7 +72,7 @@ class KernelSubscriber implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::RESPONSE => 'onKernelResponse',
