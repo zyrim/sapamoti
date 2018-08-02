@@ -7,9 +7,9 @@ services:
     # default configuration for services in *this* file
     app.event_listener.kernel_subscriber:
         class: AppBundle\EventListener\KernelSubscriber
-        arguments: ['@service_container']
+        arguments: ['@router', '@security.token_storage']
         tags:
-                - { name: kernel.event_subscriber }
+             - { name: kernel.event_subscriber }
     app.security.login_form_authenticator:
         class: AppBundle\Security\LoginFormAuthenticator
         autowire: true
