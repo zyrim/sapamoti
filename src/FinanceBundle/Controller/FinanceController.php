@@ -28,7 +28,7 @@ class FinanceController extends AbstractController
      *
      * @Route("/finance", name="finance_index")
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         /** @var \FinanceBundle\Repository\FinanceAccountRepository $repo */
         $repo     = $this->entityManager()->getRepository(\FinanceBundle\Entity\FinanceAccount::class);

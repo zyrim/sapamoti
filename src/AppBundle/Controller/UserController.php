@@ -42,7 +42,7 @@ class UserController extends Controller
      *
      * @Route("/user/edit", name="user_edit")
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request): Response
     {
         $user = $this->user();
         $form = $this->createForm(UserForm::class, $user);
@@ -62,18 +62,20 @@ class UserController extends Controller
         $form->createView();
 
         return $this->render('user/user.html.twig', [
-            'title' => 'Profil bearbeiten',
+            'title'    => 'Profil bearbeiten',
             'template' => 'user/edit.html.twig',
-            'form' => $form->createView(),
+            'form'     => $form->createView(),
         ]);
     }
 
     /**
      * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return Response
      *
      * @Route("/user/change-password", name="user_change_password")
      */
-    public function changePasswordAction(Request $request, UserPasswordEncoderInterface $encoder)
+    public function changePasswordAction(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
         $user = $this->user();
         $form = $this->createForm(ChangePasswordForm::class);
@@ -81,12 +83,12 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         $template = 'user/user.html.twig';
-        $values = [
-            'title' => 'Passwort ändern',
+        $values   = [
+            'title'    => 'Passwort ändern',
             'template' => 'user/change_password.html.twig',
-            'form' => $form->createView(),
+            'form'     => $form->createView(),
         ];
-        $success = false;
+        $success  = false;
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
@@ -133,7 +135,7 @@ class UserController extends Controller
     /**
      * @return EntityManager
      */
-    protected function entityManager()
+    protected function entityManager(): EntityManager#
     {
         if (!$this->em) {
             $this->em = $this->getDoctrine()->getManager();
@@ -145,7 +147,7 @@ class UserController extends Controller
     /**
      * @return UserRepository
      */
-    protected function repository()
+    protected function repository(): UserRepository
     {
         if (!$this->repository) {
             $this->repository = $this->entityManager()->getRepository(User::class);

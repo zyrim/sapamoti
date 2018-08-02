@@ -4,6 +4,7 @@ namespace FinanceBundle\Entity;
 
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -96,7 +97,7 @@ class FinanceAccount
      *
      * @return FinanceAccount
      */
-    public function setUser(User $user)
+    public function setUser(User $user): FinanceAccount
     {
         $this->user = $user;
 
@@ -151,7 +152,7 @@ class FinanceAccount
      *
      * @return float
      */
-    public function getTotalAmount()
+    public function getTotalAmount(): float
     {
         $amount = $this->amount;
 
@@ -195,7 +196,7 @@ class FinanceAccount
      * @param bool $before True = Dont include the movement's value. False = include it
      * @return float
      */
-    public function getAmountUntil(FinanceMovement $movement, bool $before)
+    public function getAmountUntil(FinanceMovement $movement, bool $before): float
     {
         $amount = $this->amount;
 
@@ -256,7 +257,7 @@ class FinanceAccount
      * @param string $type Type to filter the movements
      * @return \Doctrine\Common\Collections\ArrayCollection|FinanceMovement[]
      */
-    public function getMovements(string $type = 'all')
+    public function getMovements(string $type = 'all'): Collection
     {
         $movements = $this->movements;
 
@@ -276,7 +277,7 @@ class FinanceAccount
     /**
      * @see ArrayCollection::count()
      */
-    public function countMovements()
+    public function countMovements(): int
     {
         return $this->movements->count();
     }
@@ -286,7 +287,7 @@ class FinanceAccount
      *
      * @return \Doctrine\Common\Collections\ArrayCollection|FinanceMovement[]
      */
-    public function getFixedMovements()
+    public function getFixedMovements(): Collection
     {
         return $this->getMovements()->filter(function (FinanceMovement $movement) {
             return $movement->isFixed();
@@ -296,9 +297,9 @@ class FinanceAccount
     /**
      * Get the sum of all movements.
      *
-     * @return float|int
+     * @return float
      */
-    public function getMovementsAmountSum()
+    public function getMovementsAmountSum(): float
     {
         $amount = 0.0;
 
@@ -342,7 +343,7 @@ class FinanceAccount
     /**
      * @return ArrayCollection|Status[]
      */
-    public function getStatus()
+    public function getStatus(): Collection
     {
         return $this->status;
     }

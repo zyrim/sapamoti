@@ -27,7 +27,7 @@ class MovementController extends AbstractController
      *
      * @Route("/finance/movements/{financeAccountId}", name="finance_movements")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         /** @var FinanceAccount $account */
         $account   = $this->getEntity();
@@ -42,6 +42,9 @@ class MovementController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @return Response|RedirectResponse
+     *
      * @Route("finance/movements/{financeAccountId}/add", name="finance_movements_add")
      */
     public function addAction(Request $request)
@@ -142,9 +145,11 @@ class MovementController extends AbstractController
     }
 
     /**
+     * @return Response
+     *
      * @Route("/finance/strategize/{financeAccountId}", name="finance_movements_strategize")
      */
-    public function strategizeAction()
+    public function strategizeAction(): Response
     {
         /** @var FinanceAccount $account */
         $account = $this->getEntity();
