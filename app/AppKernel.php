@@ -43,12 +43,12 @@ class AppKernel extends Kernel
 
     public function getCacheDir()
     {
-        return '/tmp/symfony/sapamoti/var/cache/'.$this->getEnvironment();
+        return __DIR__ . '/../var/cache/'.$this->getEnvironment();
     }
 
     public function getLogDir()
     {
-        return '/tmp/symfony/sapamoti/var/logs';
+        return __DIR__ . '/../var/logs';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
